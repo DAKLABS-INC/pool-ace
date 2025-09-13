@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Users, Calendar, DollarSign } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const mockPools = [
   {
@@ -72,9 +73,18 @@ const Pools = () => {
                     <span className="text-primary font-medium">{pool.winSplit}% winner</span>
                   </div>
 
-                  <Button className="w-full" size="sm">
-                    Join Pool
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button className="flex-1" size="sm" asChild>
+                      <Link to={`/pools/${pool.id}`}>
+                        View Details
+                      </Link>
+                    </Button>
+                    <Button className="flex-1" size="sm" asChild>
+                      <Link to={`/pools/${pool.id}`}>
+                        Join Pool
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
