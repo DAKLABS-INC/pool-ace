@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
@@ -72,6 +73,7 @@ const PoolDetails = () => {
   const { user, updateWallet } = useAuth();
   const { toast } = useToast();
   const [betAmount, setBetAmount] = useState('');
+  const [betSide, setBetSide] = useState('');
   const [isJoining, setIsJoining] = useState(false);
 
   const pool = mockPoolDetails[parseInt(id || '0') as keyof typeof mockPoolDetails];
@@ -99,7 +101,7 @@ const PoolDetails = () => {
   const userBet = pool.participantsList.find(p => p.id === user?.id);
 
   const handleJoinPool = async () => {
-    if (!user || !betAmount) return;
+    if (!user || !betAmount || !betSide) return;
     
     const amount = parseFloat(betAmount);
     if (amount < pool.minDeposit) {
@@ -140,11 +142,12 @@ const PoolDetails = () => {
     
     toast({
       title: "Successfully joined!",
-      description: `You've joined the pool with $${amount}`,
+      description: `You've joined the pool with $${amount} betting on ${betSide}`,
     });
     
     setIsJoining(false);
     setBetAmount('');
+    setBetSide('');
     
     // Refresh page to show updated data
     window.location.reload();
@@ -296,6 +299,20 @@ const PoolDetails = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
+                    <Label htmlFor="bet-side">Pick Your Bet</Label>
+                    <Select value={betSide} onValueChange={setBetSide}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choose win/draw/loss" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="win">Win</SelectItem>
+                        <SelectItem value="draw">Draw</SelectItem>
+                        <SelectItem value="loss">Loss</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
                     <Label htmlFor="bet-amount">Bet Amount (USD)</Label>
                     <Input
                       id="bet-amount"
@@ -314,7 +331,7 @@ const PoolDetails = () => {
                   <Button 
                     className="w-full" 
                     onClick={handleJoinPool}
-                    disabled={!betAmount || parseFloat(betAmount) < pool.minDeposit || isJoining}
+                    disabled={!betAmount || !betSide || parseFloat(betAmount) < pool.minDeposit || isJoining}
                   >
                     {isJoining ? 'Joining...' : `Join with $${betAmount || '0'}`}
                   </Button>

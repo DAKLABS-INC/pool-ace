@@ -13,6 +13,11 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        'libertinus': ['Libertinus Serif', 'serif'],
+        'kode': ['Kode Mono', 'monospace'],
+        'sans': ['Kode Mono', 'monospace'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

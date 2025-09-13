@@ -50,7 +50,7 @@ const Header = () => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
             <Trophy className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-foreground">PoolAce</span>
+            <span className="text-xl font-bold text-foreground font-libertinus">PoolAce</span>
           </Link>
           
           <nav className="hidden md:flex items-center space-x-6">
