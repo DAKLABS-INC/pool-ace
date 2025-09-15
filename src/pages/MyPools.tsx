@@ -4,6 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, Calendar, DollarSign, Trophy, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { PoolResultsModal } from "@/components/Pool/PoolResultsModal";
 
 const mockMyPools = [
   {
@@ -36,6 +39,13 @@ const mockMyPools = [
 const MyPools = () => {
   const activePools = mockMyPools.filter(pool => pool.status === 'active');
   const completedPools = mockMyPools.filter(pool => pool.status === 'completed');
+  const [selectedPool, setSelectedPool] = useState<any>(null);
+  const [resultsModalOpen, setResultsModalOpen] = useState(false);
+
+  const handleViewResults = (pool: any) => {
+    setSelectedPool(pool);
+    setResultsModalOpen(true);
+  };
 
   return (
     <Layout>
@@ -91,8 +101,10 @@ const MyPools = () => {
                         <span className="text-primary font-medium">My bet: ${pool.myBet}</span>
                       </div>
 
-                      <Button className="w-full" size="sm" variant="outline">
-                        View Details
+                      <Button className="w-full" size="sm" variant="outline" asChild>
+                        <Link to={`/pool/${pool.id}`}>
+                          View Details
+                        </Link>
                       </Button>
                     </div>
                   </CardContent>
@@ -130,7 +142,12 @@ const MyPools = () => {
                         Completed on {pool.matchDate}
                       </div>
 
-                      <Button className="w-full" size="sm" variant="outline">
+                      <Button 
+                        className="w-full" 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => handleViewResults(pool)}
+                      >
                         View Results
                       </Button>
                     </div>
@@ -140,6 +157,17 @@ const MyPools = () => {
             </div>
           </TabsContent>
         </Tabs>
+
+        {selectedPool && (
+          <PoolResultsModal
+            isOpen={resultsModalOpen}
+            onClose={() => {
+              setResultsModalOpen(false);
+              setSelectedPool(null);
+            }}
+            pool={selectedPool}
+          />
+        )}
       </div>
     </Layout>
   );
