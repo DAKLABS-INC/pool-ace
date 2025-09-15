@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
-import { Wallet, User, Copy, Check } from 'lucide-react';
+import { Wallet, User, Copy, Check, ArrowUpRight } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { WithdrawModal } from './WithdrawModal';
 
 interface AccountModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ interface AccountModalProps {
 export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
+  const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
   const { toast } = useToast();
 
   const copyToClipboard = async (text: string) => {
@@ -107,11 +109,24 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
             </div>
           </div>
 
-          <div className="flex justify-end pt-4">
+          <div className="flex gap-3 pt-4">
+            <Button 
+              variant="outline" 
+              onClick={() => setWithdrawModalOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <ArrowUpRight className="h-4 w-4" />
+              Withdraw
+            </Button>
             <Button onClick={onClose}>Close</Button>
           </div>
         </div>
       </DialogContent>
+      
+      <WithdrawModal 
+        isOpen={withdrawModalOpen}
+        onClose={() => setWithdrawModalOpen(false)}
+      />
     </Dialog>
   );
 };

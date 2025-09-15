@@ -9,6 +9,7 @@ import Pools from "./pages/Pools";
 import CreatePool from "./pages/CreatePool";
 import MyPools from "./pages/MyPools";
 import PoolDetails from "./pages/PoolDetails";
+import TransactionHistory from "./pages/TransactionHistory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/pools/:id" element={<PoolDetails />} />
             <Route path="/create" element={<CreatePool />} />
             <Route path="/my-pools" element={<MyPools />} />
+            <Route path="/transaction-history" element={<TransactionHistory />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

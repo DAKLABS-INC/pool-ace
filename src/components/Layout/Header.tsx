@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Trophy, User, LogIn, UserPlus, Wallet, LogOut } from "lucide-react";
+import { Trophy, User, LogIn, UserPlus, Wallet, LogOut, History } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthModal } from '@/components/Auth/AuthModal';
@@ -98,6 +98,12 @@ const Header = () => {
                     <DropdownMenuItem onClick={() => setAccountModalOpen(true)}>
                       <User className="mr-2 h-4 w-4" />
                       Account Info
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/transaction-history">
+                        <History className="mr-2 h-4 w-4" />
+                        Transaction History
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logout}>
