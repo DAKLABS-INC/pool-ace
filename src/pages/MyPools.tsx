@@ -7,6 +7,7 @@ import { Users, Calendar, DollarSign, Trophy, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { PoolResultsModal } from "@/components/Pool/PoolResultsModal";
+import { ClaimModal } from "@/components/Pool/ClaimModal";
 
 const mockMyPools = [
   {
@@ -41,10 +42,23 @@ const MyPools = () => {
   const completedPools = mockMyPools.filter(pool => pool.status === 'completed');
   const [selectedPool, setSelectedPool] = useState<any>(null);
   const [resultsModalOpen, setResultsModalOpen] = useState(false);
+  const [claimModalOpen, setClaimModalOpen] = useState(false);
+  const [selectedClaimPool, setSelectedClaimPool] = useState<any>(null);
 
   const handleViewResults = (pool: any) => {
     setSelectedPool(pool);
     setResultsModalOpen(true);
+  };
+
+  const handleClaimWinnings = (pool: any) => {
+    setSelectedClaimPool(pool);
+    setClaimModalOpen(true);
+  };
+
+  const calculatePredictedWin = (pool: any) => {
+    const userContribution = (pool.myBet / pool.totalPool) * 100;
+    const potentialWin = (pool.totalPool * pool.winSplit / 100) * (pool.myBet / pool.totalPool);
+    return { userContribution, potentialWin };
   };
 
   return (
@@ -101,6 +115,15 @@ const MyPools = () => {
                         <span className="text-primary font-medium">My bet: ${pool.myBet}</span>
                       </div>
 
+                      {(() => {
+                        const { userContribution, potentialWin } = calculatePredictedWin(pool);
+                        return (
+                          <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
+                            Your contribution: {userContribution.toFixed(1)}% • Potential win: ${potentialWin.toFixed(2)}
+                          </div>
+                        );
+                      })()}
+
                       <Button className="w-full" size="sm" variant="outline" asChild>
                         <Link to={`/pool/${pool.id}`}>
                           View Details
@@ -142,14 +165,25 @@ const MyPools = () => {
                         Completed on {pool.matchDate}
                       </div>
 
-                      <Button 
-                        className="w-full" 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => handleViewResults(pool)}
-                      >
-                        View Results
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button 
+                          className="flex-1" 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleViewResults(pool)}
+                        >
+                          View Results
+                        </Button>
+                        {pool.result === 'won' && (
+                          <Button 
+                            size="sm" 
+                            onClick={() => handleClaimWinnings(pool)}
+                            className="bg-primary hover:bg-primary/90"
+                          >
+                            Claim
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -166,6 +200,17 @@ const MyPools = () => {
               setSelectedPool(null);
             }}
             pool={selectedPool}
+          />
+        )}
+
+        {selectedClaimPool && (
+          <ClaimModal
+            isOpen={claimModalOpen}
+            onClose={() => {
+              setClaimModalOpen(false);
+              setSelectedClaimPool(null);
+            }}
+            pool={selectedClaimPool}
           />
         )}
       </div>
