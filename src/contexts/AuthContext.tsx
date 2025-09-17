@@ -15,6 +15,7 @@ interface AuthContextType {
   signup: (email: string, password: string, name: string) => Promise<boolean>;
   logout: () => void;
   updateWallet: (amount: number) => void;
+  refreshWallet: () => void;
   isLoading: boolean;
 }
 
@@ -160,6 +161,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const refreshWallet = () => {
+    if (!user) return;
+    
+    // Simulate refreshing wallet balance - in real app this would fetch from API
+    const randomChange = Math.floor(Math.random() * 200) - 100; // Random change between -100 to +100
+    const newBalance = Math.max(0, user.walletBalance + randomChange);
+    
+    const updatedUser = { ...user, walletBalance: newBalance };
+    setUser(updatedUser);
+    localStorage.setItem('poolace_user', JSON.stringify(updatedUser));
+    
+    // Also update in users storage
+    const storedUsers = JSON.parse(localStorage.getItem('poolace_users') || '[]');
+    const userIndex = storedUsers.findIndex((u: any) => u.id === user.id);
+    if (userIndex !== -1) {
+      storedUsers[userIndex].walletBalance = newBalance;
+      localStorage.setItem('poolace_users', JSON.stringify(storedUsers));
+    }
+    
+    toast({
+      title: "Wallet refreshed",
+      description: "Wallet balance updated successfully",
+    });
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -167,6 +193,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       signup,
       logout,
       updateWallet,
+      refreshWallet,
       isLoading
     }}>
       {children}

@@ -9,14 +9,14 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Trophy, User, LogIn, UserPlus, Wallet, LogOut, History } from "lucide-react";
+import { Trophy, User, LogIn, UserPlus, Wallet, LogOut, History, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthModal } from '@/components/Auth/AuthModal';
 import { AccountModal } from '@/components/Auth/AccountModal';
 
 const Header = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshWallet } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [accountModalOpen, setAccountModalOpen] = useState(false);
   const [showAccountModal, setShowAccountModal] = useState(false);
@@ -72,10 +72,20 @@ const Header = () => {
           <div className="flex items-center space-x-3">
             {user ? (
               <>
-                <Badge variant="outline" className="hidden sm:flex items-center gap-1">
-                  <Wallet className="h-3 w-3" />
-                  ${user.walletBalance.toLocaleString()}
-                </Badge>
+                <div className="hidden sm:flex items-center gap-2">
+                  <Badge variant="outline" className="flex items-center gap-1">
+                    <Wallet className="h-3 w-3" />
+                    ${user.walletBalance.toLocaleString()}
+                  </Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={refreshWallet}
+                    className="h-7 w-7 p-0"
+                  >
+                    <RefreshCw className="h-3 w-3" />
+                  </Button>
+                </div>
                 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

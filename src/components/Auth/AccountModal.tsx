@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
-import { Wallet, User, Copy, Check, ArrowUpRight } from 'lucide-react';
+import { Wallet, User, Copy, Check, ArrowUpRight, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { WithdrawModal } from './WithdrawModal';
@@ -15,7 +15,7 @@ interface AccountModalProps {
 }
 
 export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
-  const { user } = useAuth();
+  const { user, refreshWallet } = useAuth();
   const [copied, setCopied] = useState(false);
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
   const { toast } = useToast();
@@ -83,6 +83,14 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                   <Badge variant="outline" className="text-xs">
                     Available
                   </Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={refreshWallet}
+                    className="h-7 w-7 p-0 ml-auto"
+                  >
+                    <RefreshCw className="h-3 w-3" />
+                  </Button>
                 </div>
               </div>
               
