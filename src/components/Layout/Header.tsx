@@ -9,14 +9,16 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Trophy, User, LogIn, UserPlus, Wallet, LogOut, History, RefreshCw } from "lucide-react";
+import { Trophy, User, LogIn, UserPlus, Wallet, LogOut, History, RefreshCw, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthModal } from '@/components/Auth/AuthModal';
 import { AccountModal } from '@/components/Auth/AccountModal';
+import { useTheme } from "next-themes";
 
 const Header = () => {
   const { user, logout, refreshWallet } = useAuth();
+  const { theme, setTheme } = useTheme();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [accountModalOpen, setAccountModalOpen] = useState(false);
   const [showAccountModal, setShowAccountModal] = useState(false);
@@ -114,6 +116,20 @@ const Header = () => {
                         <History className="mr-2 h-4 w-4" />
                         Transaction History
                       </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                      {theme === "dark" ? (
+                        <>
+                          <Sun className="mr-2 h-4 w-4" />
+                          Light Mode
+                        </>
+                      ) : (
+                        <>
+                          <Moon className="mr-2 h-4 w-4" />
+                          Dark Mode
+                        </>
+                      )}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logout}>
