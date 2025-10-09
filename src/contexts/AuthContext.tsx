@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useUser, useClerk } from '@clerk/clerk-react';
 
 interface User {
   id: string;
@@ -30,115 +31,56 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user: clerkUser, isLoaded } = useUser();
+  const { signOut, openSignIn, openSignUp } = useClerk();
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check for stored user on mount
-    const storedUser = localStorage.getItem('poolace_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    if (isLoaded && clerkUser) {
+      // Get or create wallet data for user
+      const walletKey = `wallet_${clerkUser.id}`;
+      let walletData = localStorage.getItem(walletKey);
+      
+      if (!walletData) {
+        // Create new wallet for user
+        const newWallet = {
+          walletAddress: `0x${Math.random().toString(16).substr(2, 40)}`,
+          walletBalance: Math.floor(Math.random() * 10000) + 1000
+        };
+        localStorage.setItem(walletKey, JSON.stringify(newWallet));
+        walletData = JSON.stringify(newWallet);
+      }
+      
+      const { walletAddress, walletBalance } = JSON.parse(walletData);
+      
+      setUser({
+        id: clerkUser.id,
+        email: clerkUser.primaryEmailAddress?.emailAddress || '',
+        name: clerkUser.fullName || clerkUser.firstName || 'User',
+        walletAddress,
+        walletBalance
+      });
+    } else if (isLoaded && !clerkUser) {
+      setUser(null);
     }
-    setIsLoading(false);
-  }, []);
+  }, [clerkUser, isLoaded]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Check stored users
-    const storedUsers = JSON.parse(localStorage.getItem('poolace_users') || '[]');
-    const foundUser = storedUsers.find((u: any) => u.email === email && u.password === password);
-    
-    if (foundUser) {
-      const userSession = {
-        id: foundUser.id,
-        email: foundUser.email,
-        name: foundUser.name,
-        walletAddress: foundUser.walletAddress,
-        walletBalance: foundUser.walletBalance
-      };
-      setUser(userSession);
-      localStorage.setItem('poolace_user', JSON.stringify(userSession));
-      toast({
-        title: "Welcome back!",
-        description: `Successfully logged in as ${foundUser.name}`,
-      });
-      setIsLoading(false);
-      return true;
-    } else {
-      toast({
-        title: "Login failed",
-        description: "Invalid email or password",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-      return false;
-    }
+    // Clerk handles authentication, just open the sign-in modal
+    openSignIn();
+    return true;
   };
 
   const signup = async (email: string, password: string, name: string): Promise<boolean> => {
-    setIsLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Check if user already exists
-    const storedUsers = JSON.parse(localStorage.getItem('poolace_users') || '[]');
-    const existingUser = storedUsers.find((u: any) => u.email === email);
-    
-    if (existingUser) {
-      toast({
-        title: "Signup failed",
-        description: "User with this email already exists",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-      return false;
-    }
-    
-    // Generate mock wallet address and balance
-    const walletAddress = `0x${Math.random().toString(16).substr(2, 40)}`;
-    const walletBalance = Math.floor(Math.random() * 10000) + 1000; // Random balance between 1000-11000
-    
-    const newUser = {
-      id: Math.random().toString(36).substr(2, 9),
-      email,
-      password,
-      name,
-      walletAddress,
-      walletBalance
-    };
-    
-    storedUsers.push(newUser);
-    localStorage.setItem('poolace_users', JSON.stringify(storedUsers));
-    
-    const userSession = {
-      id: newUser.id,
-      email: newUser.email,
-      name: newUser.name,
-      walletAddress: newUser.walletAddress,
-      walletBalance: newUser.walletBalance
-    };
-    
-    setUser(userSession);
-    localStorage.setItem('poolace_user', JSON.stringify(userSession));
-    
-    toast({
-      title: "Account created!",
-      description: `Welcome to PoolAce, ${name}!`,
-    });
-    
-    setIsLoading(false);
+    // Clerk handles authentication, just open the sign-up modal
+    openSignUp();
     return true;
   };
 
   const logout = () => {
+    signOut();
     setUser(null);
-    localStorage.removeItem('poolace_user');
     toast({
       title: "Logged out",
       description: "You have been successfully logged out",
@@ -150,35 +92,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     const updatedUser = { ...user, walletBalance: user.walletBalance + amount };
     setUser(updatedUser);
-    localStorage.setItem('poolace_user', JSON.stringify(updatedUser));
     
-    // Also update in users storage
-    const storedUsers = JSON.parse(localStorage.getItem('poolace_users') || '[]');
-    const userIndex = storedUsers.findIndex((u: any) => u.id === user.id);
-    if (userIndex !== -1) {
-      storedUsers[userIndex].walletBalance = updatedUser.walletBalance;
-      localStorage.setItem('poolace_users', JSON.stringify(storedUsers));
-    }
+    // Update wallet in localStorage
+    const walletKey = `wallet_${user.id}`;
+    localStorage.setItem(walletKey, JSON.stringify({
+      walletAddress: updatedUser.walletAddress,
+      walletBalance: updatedUser.walletBalance
+    }));
   };
 
   const refreshWallet = () => {
     if (!user) return;
     
     // Simulate refreshing wallet balance - in real app this would fetch from API
-    const randomChange = Math.floor(Math.random() * 200) - 100; // Random change between -100 to +100
+    const randomChange = Math.floor(Math.random() * 200) - 100;
     const newBalance = Math.max(0, user.walletBalance + randomChange);
     
     const updatedUser = { ...user, walletBalance: newBalance };
     setUser(updatedUser);
-    localStorage.setItem('poolace_user', JSON.stringify(updatedUser));
     
-    // Also update in users storage
-    const storedUsers = JSON.parse(localStorage.getItem('poolace_users') || '[]');
-    const userIndex = storedUsers.findIndex((u: any) => u.id === user.id);
-    if (userIndex !== -1) {
-      storedUsers[userIndex].walletBalance = newBalance;
-      localStorage.setItem('poolace_users', JSON.stringify(storedUsers));
-    }
+    // Update wallet in localStorage
+    const walletKey = `wallet_${user.id}`;
+    localStorage.setItem(walletKey, JSON.stringify({
+      walletAddress: updatedUser.walletAddress,
+      walletBalance: newBalance
+    }));
     
     toast({
       title: "Wallet refreshed",
@@ -194,7 +132,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       logout,
       updateWallet,
       refreshWallet,
-      isLoading
+      isLoading: !isLoaded
     }}>
       {children}
     </AuthContext.Provider>
