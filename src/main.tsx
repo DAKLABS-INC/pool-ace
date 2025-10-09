@@ -4,7 +4,7 @@ import "./index.css";
 import { ThemeProvider } from "./components/Theme/ThemeProvider";
 import { ClerkProvider } from '@clerk/clerk-react';
 
-const PUBLISHABLE_KEY = "pk_test_YOUR_CLERK_PUBLISHABLE_KEY_HERE";
+const PUBLISHABLE_KEY = "pk_test_c3F1YXJlLW1heWZseS05NS5jbGVyay5hY2NvdW50cy5kZXYk";
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
