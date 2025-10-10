@@ -1,14 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, LogIn, UserPlus, Wallet, RefreshCw } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { Trophy, User, LogIn, UserPlus, Wallet, LogOut, History, RefreshCw, Moon, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from '@/contexts/AuthContext';
-import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/clerk-react';
+import { AuthModal } from '@/components/Auth/AuthModal';
+import { AccountModal } from '@/components/Auth/AccountModal';
+import { useTheme } from "next-themes";
 
 const Header = () => {
-  const { user, refreshWallet } = useAuth();
-  const { isSignedIn } = useUser();
+  const { user, logout, refreshWallet } = useAuth();
+  const { theme, setTheme } = useTheme();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [accountModalOpen, setAccountModalOpen] = useState(false);
+  const [showAccountModal, setShowAccountModal] = useState(false);
+
+  const handleLoginSuccess = () => {
+    setShowAccountModal(true);
+  };
+
+  useEffect(() => {
+    if (showAccountModal) {
+      const timer = setTimeout(() => {
+        setAccountModalOpen(true);
+        setShowAccountModal(false);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [showAccountModal]);
+
+  const getUserInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   return (
     <>
@@ -36,7 +72,7 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center space-x-3">
-            {isSignedIn && user ? (
+            {user ? (
               <>
                 <div className="hidden sm:flex items-center gap-2">
                   <Badge variant="outline" className="flex items-center gap-1">
@@ -53,35 +89,82 @@ const Header = () => {
                   </Button>
                 </div>
                 
-                <UserButton 
-                  afterSignOutUrl="/"
-                  appearance={{
-                    elements: {
-                      avatarBox: "h-8 w-8",
-                      userButtonPopoverCard: "shadow-lg",
-                    }
-                  }}
-                />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback>{getUserInitials(user.name)}</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <div className="flex items-center justify-start gap-2 p-2">
+                      <div className="flex flex-col space-y-1 leading-none">
+                        <p className="font-medium">{user.name}</p>
+                        <p className="w-[200px] truncate text-sm text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setAccountModalOpen(true)}>
+                      <User className="mr-2 h-4 w-4" />
+                      Account Info
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/transaction-history">
+                        <History className="mr-2 h-4 w-4" />
+                        Transaction History
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                      {theme === "dark" ? (
+                        <>
+                          <Sun className="mr-2 h-4 w-4" />
+                          Light Mode
+                        </>
+                      ) : (
+                        <>
+                          <Moon className="mr-2 h-4 w-4" />
+                          Dark Mode
+                        </>
+                      )}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={logout}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </>
             ) : (
               <div className="flex items-center space-x-2">
-                <SignInButton mode="modal">
-                  <Button variant="ghost" size="sm">
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Login
-                  </Button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <Button size="sm">
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Sign Up
-                  </Button>
-                </SignUpButton>
+                <Button variant="ghost" size="sm" onClick={() => setAuthModalOpen(true)}>
+                  <LogIn className="h-4 w-4 mr-2" />
+                  Login
+                </Button>
+                <Button size="sm" onClick={() => setAuthModalOpen(true)}>
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Sign Up
+                </Button>
               </div>
             )}
           </div>
         </div>
       </header>
+
+      <AuthModal 
+        isOpen={authModalOpen} 
+        onClose={() => setAuthModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
+      
+      <AccountModal 
+        isOpen={accountModalOpen} 
+        onClose={() => setAccountModalOpen(false)}
+      />
     </>
   );
 };

@@ -11,22 +11,7 @@ if (!PUBLISHABLE_KEY) {
 }
 
 createRoot(document.getElementById("root")!).render(
-  <ClerkProvider 
-    publishableKey={PUBLISHABLE_KEY}
-    appearance={{
-      variables: {
-        colorPrimary: 'hsl(262.1 83.3% 57.8%)',
-        colorBackground: 'hsl(224 71.4% 4.1%)',
-        colorInputBackground: 'hsl(224 71.4% 4.1%)',
-        colorInputText: 'hsl(210 20% 98%)',
-        colorText: 'hsl(210 20% 98%)',
-      },
-      elements: {
-        card: 'bg-card',
-        modalBackdrop: 'bg-background/80',
-      }
-    }}
-  >
+  <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <App />
     </ThemeProvider>
