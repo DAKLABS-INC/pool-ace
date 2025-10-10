@@ -38,11 +38,11 @@ const mockPoolDetails = {
     description: "Premier League showdown between Manchester City and Arsenal. Winner takes all based on match result!",
     owner: { id: "owner1", name: "John Smith", initials: "JS" },
     participantsList: [
-      { id: "owner1", name: "John Smith", betAmount: 100, initials: "JS", isOwner: true },
-      { id: "user1", name: "Alice Johnson", betAmount: 75, initials: "AJ", isOwner: false },
-      { id: "user2", name: "Bob Wilson", betAmount: 50, initials: "BW", isOwner: false },
-      { id: "user3", name: "Charlie Brown", betAmount: 150, initials: "CB", isOwner: false },
-      { id: "user4", name: "Diana Davis", betAmount: 80, initials: "DD", isOwner: false },
+      { id: "owner1", name: "John Smith", betAmount: 100, initials: "JS", isOwner: true, betChoice: "win" },
+      { id: "user1", name: "Alice Johnson", betAmount: 75, initials: "AJ", isOwner: false, betChoice: "win" },
+      { id: "user2", name: "Bob Wilson", betAmount: 50, initials: "BW", isOwner: false, betChoice: "draw" },
+      { id: "user3", name: "Charlie Brown", betAmount: 150, initials: "CB", isOwner: false, betChoice: "win" },
+      { id: "user4", name: "Diana Davis", betAmount: 80, initials: "DD", isOwner: false, betChoice: "loss" },
     ]
   },
   2: {
@@ -60,9 +60,9 @@ const mockPoolDetails = {
     description: "Epic NBA rivalry game between Lakers and Warriors. Private pool for serious basketball fans!",
     owner: { id: "owner2", name: "Mike Jordan", initials: "MJ" },
     participantsList: [
-      { id: "owner2", name: "Mike Jordan", betAmount: 100, initials: "MJ", isOwner: true },
-      { id: "user5", name: "Sarah Connor", betAmount: 50, initials: "SC", isOwner: false },
-      { id: "user6", name: "Tony Stark", betAmount: 200, initials: "TS", isOwner: false },
+      { id: "owner2", name: "Mike Jordan", betAmount: 100, initials: "MJ", isOwner: true, betChoice: "win" },
+      { id: "user5", name: "Sarah Connor", betAmount: 50, initials: "SC", isOwner: false, betChoice: "loss" },
+      { id: "user6", name: "Tony Stark", betAmount: 200, initials: "TS", isOwner: false, betChoice: "win" },
     ]
   }
 };
@@ -229,29 +229,47 @@ const PoolDetails = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {pool.participantsList.map((participant) => (
-                    <div key={participant.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarFallback>{participant.initials}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="font-medium flex items-center gap-2">
-                            {participant.name}
-                            {participant.isOwner && (
-                              <Crown className="h-4 w-4 text-primary" />
-                            )}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {participant.isOwner ? 'Pool Owner' : 'Participant'}
+                  {pool.participantsList.map((participant) => {
+                    const contributionPercentage = ((participant.betAmount / pool.totalPool) * 100).toFixed(1);
+                    const potentialReward = (participant.betAmount * (pool.winSplit / 100) * pool.totalPool / participant.betAmount).toFixed(2);
+                    
+                    const getBetVariant = (choice: string) => {
+                      if (choice === "win") return "default";
+                      if (choice === "draw") return "secondary";
+                      return "outline";
+                    };
+
+                    return (
+                      <div key={participant.id} className="flex items-center justify-between p-3 bg-muted rounded-lg gap-3">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <Avatar className="flex-shrink-0">
+                            <AvatarFallback>{participant.initials}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium flex items-center gap-2 flex-wrap">
+                              <span className="truncate">{participant.name}</span>
+                              {participant.isOwner && (
+                                <Crown className="h-4 w-4 text-primary flex-shrink-0" />
+                              )}
+                            </div>
+                            <div className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap">
+                              <span>{contributionPercentage}% of pool</span>
+                              <span>•</span>
+                              <span>Potential: ${potentialReward}</span>
+                            </div>
                           </div>
                         </div>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <Badge variant={getBetVariant(participant.betChoice)} className="capitalize">
+                            {participant.betChoice}
+                          </Badge>
+                          <Badge variant="secondary">
+                            ${participant.betAmount}
+                          </Badge>
+                        </div>
                       </div>
-                      <Badge variant="secondary">
-                        ${participant.betAmount}
-                      </Badge>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
