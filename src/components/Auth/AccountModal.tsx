@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { Wallet, User, Copy, Check, ArrowUpRight, RefreshCw, Coins } from 'lucide-react';
 import { useState } from 'react';
@@ -18,6 +19,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
   const { user, refreshWallet } = useAuth();
   const [copied, setCopied] = useState(false);
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
+  const [useDakDiscount, setUseDakDiscount] = useState(false);
   const { toast } = useToast();
 
   const copyToClipboard = async (text: string) => {
@@ -42,15 +44,15 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] flex flex-col">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
             Account Information
           </DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6">
+        <div className="space-y-6 overflow-y-auto scrollbar-hide pr-2 flex-1">
           {/* Personal Information */}
           <div className="space-y-4">
             <div className="space-y-2">
@@ -140,19 +142,38 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                 Use DAK tokens to get discounts on pool entries and transactions
               </p>
             </div>
+            
+            <div className="flex items-start space-x-3 p-3 bg-muted/50 rounded-lg">
+              <Checkbox 
+                id="use-dak-discount" 
+                checked={useDakDiscount}
+                onCheckedChange={(checked) => setUseDakDiscount(checked as boolean)}
+              />
+              <div className="grid gap-1.5 leading-none">
+                <label
+                  htmlFor="use-dak-discount"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                >
+                  Use DAK tokens for discounts
+                </label>
+                <p className="text-xs text-muted-foreground">
+                  Apply DAK tokens to get small discounts on transaction fees for withdrawals and claims
+                </p>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <div className="flex gap-3 pt-4">
-            <Button 
-              variant="outline" 
-              onClick={() => setWithdrawModalOpen(true)}
-              className="flex items-center gap-2"
-            >
-              <ArrowUpRight className="h-4 w-4" />
-              Withdraw
-            </Button>
-            <Button onClick={onClose}>Close</Button>
-          </div>
+        <div className="flex gap-3 pt-4 border-t flex-shrink-0">
+          <Button 
+            variant="outline" 
+            onClick={() => setWithdrawModalOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <ArrowUpRight className="h-4 w-4" />
+            Withdraw
+          </Button>
+          <Button onClick={onClose}>Close</Button>
         </div>
       </DialogContent>
       
