@@ -8,6 +8,7 @@ interface User {
   name: string;
   walletAddress: string;
   walletBalance: number;
+  dakTokens: number;
 }
 
 interface AuthContextType {
@@ -46,20 +47,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Create new wallet for user
         const newWallet = {
           walletAddress: `0x${Math.random().toString(16).substr(2, 40)}`,
-          walletBalance: Math.floor(Math.random() * 10000) + 1000
+          walletBalance: Math.floor(Math.random() * 10000) + 1000,
+          dakTokens: Math.floor(Math.random() * 500) + 100
         };
         localStorage.setItem(walletKey, JSON.stringify(newWallet));
         walletData = JSON.stringify(newWallet);
       }
       
-      const { walletAddress, walletBalance } = JSON.parse(walletData);
+      const parsedWallet = JSON.parse(walletData);
+      const { walletAddress, walletBalance, dakTokens = 0 } = parsedWallet;
       
       setUser({
         id: clerkUser.id,
         email: clerkUser.primaryEmailAddress?.emailAddress || '',
         name: clerkUser.fullName || clerkUser.firstName || 'User',
         walletAddress,
-        walletBalance
+        walletBalance,
+        dakTokens
       });
     } else if (isLoaded && !clerkUser) {
       setUser(null);
@@ -97,7 +101,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const walletKey = `wallet_${user.id}`;
     localStorage.setItem(walletKey, JSON.stringify({
       walletAddress: updatedUser.walletAddress,
-      walletBalance: updatedUser.walletBalance
+      walletBalance: updatedUser.walletBalance,
+      dakTokens: updatedUser.dakTokens
     }));
   };
 
@@ -115,7 +120,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const walletKey = `wallet_${user.id}`;
     localStorage.setItem(walletKey, JSON.stringify({
       walletAddress: updatedUser.walletAddress,
-      walletBalance: newBalance
+      walletBalance: newBalance,
+      dakTokens: updatedUser.dakTokens
     }));
     
     toast({

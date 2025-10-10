@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
-import { Wallet, User, Copy, Check, ArrowUpRight, RefreshCw } from 'lucide-react';
+import { Wallet, User, Copy, Check, ArrowUpRight, RefreshCw, Coins } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { WithdrawModal } from './WithdrawModal';
@@ -114,6 +114,31 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                   </Button>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* DAK Tokens Section */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Coins className="h-5 w-5 text-primary" />
+              <h3 className="font-semibold">DAK Tokens</h3>
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Accumulated Tokens</label>
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="text-lg px-3 py-1">
+                  {user.dakTokens.toLocaleString()} DAK
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  Discount Credits
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Use DAK tokens to get discounts on pool entries and transactions
+              </p>
             </div>
           </div>
 
