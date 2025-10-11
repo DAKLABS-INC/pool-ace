@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { PoolResultsModal } from "@/components/Pool/PoolResultsModal";
 import { ClaimModal } from "@/components/Pool/ClaimModal";
+import { PoolDetailsModal } from "@/components/Pool/PoolDetailsModal";
+import { WithdrawFromPoolModal } from "@/components/Pool/WithdrawFromPoolModal";
 
 const mockMyPools = [
   {
@@ -21,6 +23,12 @@ const mockMyPools = [
     myBet: 50,
     winSplit: 70,
     matchDate: "2024-01-15",
+    isPrivate: false,
+    participantsList: [
+      { id: "owner1", name: "John Smith", betAmount: 100, initials: "JS", isOwner: true, betChoice: "win" },
+      { id: "user1", name: "Alice Johnson", betAmount: 75, initials: "AJ", isOwner: false, betChoice: "win" },
+      { id: "user2", name: "Bob Wilson", betAmount: 50, initials: "BW", isOwner: false, betChoice: "draw" },
+    ]
   },
   {
     id: 2,
@@ -44,6 +52,9 @@ const MyPools = () => {
   const [resultsModalOpen, setResultsModalOpen] = useState(false);
   const [claimModalOpen, setClaimModalOpen] = useState(false);
   const [selectedClaimPool, setSelectedClaimPool] = useState<any>(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
+  const [selectedWithdrawPool, setSelectedWithdrawPool] = useState<any>(null);
 
   const handleViewResults = (pool: any) => {
     setSelectedPool(pool);
@@ -53,6 +64,16 @@ const MyPools = () => {
   const handleClaimWinnings = (pool: any) => {
     setSelectedClaimPool(pool);
     setClaimModalOpen(true);
+  };
+
+  const handleViewDetails = (pool: any) => {
+    setSelectedPool(pool);
+    setDetailsModalOpen(true);
+  };
+
+  const handleWithdraw = (pool: any) => {
+    setSelectedWithdrawPool(pool);
+    setWithdrawModalOpen(true);
   };
 
   const calculatePredictedWin = (pool: any) => {
@@ -124,11 +145,24 @@ const MyPools = () => {
                         );
                       })()}
 
-                      <Button className="w-full" size="sm" variant="outline" asChild>
-                        <Link to={`/pool/${pool.id}`}>
+                      <div className="flex gap-2">
+                        <Button 
+                          className="flex-1" 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleViewDetails(pool)}
+                        >
                           View Details
-                        </Link>
-                      </Button>
+                        </Button>
+                        <Button 
+                          className="flex-1" 
+                          size="sm" 
+                          variant="destructive"
+                          onClick={() => handleWithdraw(pool)}
+                        >
+                          Withdraw
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -211,6 +245,28 @@ const MyPools = () => {
               setSelectedClaimPool(null);
             }}
             pool={selectedClaimPool}
+          />
+        )}
+
+        {selectedPool && (
+          <PoolDetailsModal
+            isOpen={detailsModalOpen}
+            onClose={() => {
+              setDetailsModalOpen(false);
+              setSelectedPool(null);
+            }}
+            pool={selectedPool}
+          />
+        )}
+
+        {selectedWithdrawPool && (
+          <WithdrawFromPoolModal
+            isOpen={withdrawModalOpen}
+            onClose={() => {
+              setWithdrawModalOpen(false);
+              setSelectedWithdrawPool(null);
+            }}
+            pool={selectedWithdrawPool}
           />
         )}
       </div>

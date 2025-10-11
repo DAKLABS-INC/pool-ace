@@ -156,18 +156,26 @@ const allMockPools = [
 
 const Pools = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSport, setSelectedSport] = useState<string>("all");
   const [displayedPools, setDisplayedPools] = useState<typeof allMockPools>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const observerTarget = useRef<HTMLDivElement>(null);
   const POOLS_PER_PAGE = 6;
 
-  // Filter pools based on search query
-  const filteredPools = allMockPools.filter(pool => 
-    pool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    pool.sport.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    pool.league.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Get unique sports for filters
+  const availableSports = ["all", ...Array.from(new Set(allMockPools.map(pool => pool.sport)))];
+
+  // Filter pools based on search query and sport
+  const filteredPools = allMockPools.filter(pool => {
+    const matchesSearch = pool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      pool.sport.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      pool.league.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesSport = selectedSport === "all" || pool.sport === selectedSport;
+    
+    return matchesSearch && matchesSport;
+  });
 
   // Load more pools
   const loadMorePools = useCallback(() => {
@@ -184,12 +192,12 @@ const Pools = () => {
     }
   }, [page, filteredPools]);
 
-  // Reset when search changes
+  // Reset when search or sport filter changes
   useEffect(() => {
     setDisplayedPools([]);
     setPage(1);
     setHasMore(true);
-  }, [searchQuery]);
+  }, [searchQuery, selectedSport]);
 
   // Initial load and load more
   useEffect(() => {
@@ -230,7 +238,7 @@ const Pools = () => {
         </div>
 
         {/* Search Bar */}
-        <div className="mb-6 relative">
+        <div className="mb-4 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
@@ -239,6 +247,20 @@ const Pools = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
           />
+        </div>
+
+        {/* Sport Filters */}
+        <div className="mb-6 flex flex-wrap gap-2">
+          {availableSports.map((sport) => (
+            <Badge
+              key={sport}
+              variant={selectedSport === sport ? "default" : "outline"}
+              className="cursor-pointer hover:bg-primary/90 transition-colors capitalize"
+              onClick={() => setSelectedSport(sport)}
+            >
+              {sport}
+            </Badge>
+          ))}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
