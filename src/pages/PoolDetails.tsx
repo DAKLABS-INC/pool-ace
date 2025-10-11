@@ -18,7 +18,10 @@ import {
   Trophy, 
   ArrowLeft, 
   UserPlus,
-  Crown
+  Crown,
+  Share2,
+  Copy,
+  Check
 } from 'lucide-react';
 
 // Mock pool data - in a real app this would come from an API
@@ -37,6 +40,7 @@ const mockPoolDetails = {
     totalPool: 1200,
     description: "Premier League showdown between Manchester City and Arsenal. Winner takes all based on match result!",
     owner: { id: "owner1", name: "John Smith", initials: "JS" },
+    inviteCode: "POOL1ABC",
     participantsList: [
       { id: "owner1", name: "John Smith", betAmount: 100, initials: "JS", isOwner: true, betChoice: "win" },
       { id: "user1", name: "Alice Johnson", betAmount: 75, initials: "AJ", isOwner: false, betChoice: "win" },
@@ -59,6 +63,7 @@ const mockPoolDetails = {
     totalPool: 600,
     description: "Epic NBA rivalry game between Lakers and Warriors. Private pool for serious basketball fans!",
     owner: { id: "owner2", name: "Mike Jordan", initials: "MJ" },
+    inviteCode: "POOL2XYZ",
     participantsList: [
       { id: "owner2", name: "Mike Jordan", betAmount: 100, initials: "MJ", isOwner: true, betChoice: "win" },
       { id: "user5", name: "Sarah Connor", betAmount: 50, initials: "SC", isOwner: false, betChoice: "loss" },
@@ -75,6 +80,8 @@ const PoolDetails = () => {
   const [betAmount, setBetAmount] = useState('');
   const [betSide, setBetSide] = useState('');
   const [isJoining, setIsJoining] = useState(false);
+  const [inviteCode, setInviteCode] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const pool = mockPoolDetails[parseInt(id || '0') as keyof typeof mockPoolDetails];
   
@@ -99,6 +106,26 @@ const PoolDetails = () => {
   const isParticipant = user && pool.participantsList.some(p => p.id === user.id);
   const canJoin = user && !isParticipant && pool.participants < pool.maxParticipants;
   const userBet = pool.participantsList.find(p => p.id === user?.id);
+  const isOwner = user?.id === pool.owner.id;
+
+  const handleCopyInviteCode = () => {
+    navigator.clipboard.writeText(pool.inviteCode);
+    setCopied(true);
+    toast({
+      title: "Copied!",
+      description: "Invite code copied to clipboard",
+    });
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSharePool = () => {
+    const shareUrl = `${window.location.origin}/pools/${pool.id}`;
+    navigator.clipboard.writeText(shareUrl);
+    toast({
+      title: "Link copied!",
+      description: "Pool link copied to clipboard",
+    });
+  };
 
   const handleJoinPool = async () => {
     if (!user || !betAmount || !betSide) return;
@@ -172,8 +199,35 @@ const PoolDetails = () => {
                 {pool.isPrivate && <Badge variant="outline">Private</Badge>}
               </div>
             </div>
+            <div>
+              <Button variant="outline" size="sm" onClick={handleSharePool}>
+                <Share2 className="h-4 w-4 mr-2" />
+                Share Pool
+              </Button>
+            </div>
           </div>
         </div>
+
+        {/* Invite Code Section - Show to owner */}
+        {isOwner && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Share2 className="h-5 w-5" />
+                Pool Invite Code
+              </CardTitle>
+              <CardDescription>Share this code with others to invite them to your pool</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2">
+                <Input value={pool.inviteCode} readOnly className="font-mono" />
+                <Button variant="outline" size="icon" onClick={handleCopyInviteCode}>
+                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Pool Information */}
@@ -316,6 +370,23 @@ const PoolDetails = () => {
                   <CardDescription>Enter your bet amount to join this pool</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {pool.isPrivate && !isParticipant && (
+                    <div>
+                      <Label htmlFor="invite-code">Invite Code</Label>
+                      <Input
+                        id="invite-code"
+                        type="text"
+                        placeholder="Enter invite code"
+                        value={inviteCode}
+                        onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
+                        className="font-mono"
+                      />
+                      <div className="text-xs text-muted-foreground mt-1">
+                        This is a private pool. You need an invite code to join.
+                      </div>
+                    </div>
+                  )}
+                  
                   <div>
                     <Label htmlFor="bet-side">Pick Your Bet</Label>
                     <Select value={betSide} onValueChange={setBetSide}>
@@ -349,10 +420,19 @@ const PoolDetails = () => {
                   <Button 
                     className="w-full" 
                     onClick={handleJoinPool}
-                    disabled={!betAmount || !betSide || parseFloat(betAmount) < pool.minDeposit || isJoining}
+                    disabled={
+                      !betAmount || 
+                      !betSide || 
+                      parseFloat(betAmount) < pool.minDeposit || 
+                      isJoining ||
+                      (pool.isPrivate && inviteCode !== pool.inviteCode)
+                    }
                   >
                     {isJoining ? 'Joining...' : `Join with $${betAmount || '0'}`}
                   </Button>
+                  {pool.isPrivate && inviteCode && inviteCode !== pool.inviteCode && (
+                    <p className="text-xs text-destructive">Invalid invite code</p>
+                  )}
                 </CardContent>
               </Card>
             )}

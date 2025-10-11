@@ -24,6 +24,8 @@ const mockMyPools = [
     winSplit: 70,
     matchDate: "2024-01-15",
     isPrivate: false,
+    owner: { id: "owner1", name: "John Smith", initials: "JS" },
+    inviteCode: "POOL1ABC",
     participantsList: [
       { id: "owner1", name: "John Smith", betAmount: 100, initials: "JS", isOwner: true, betChoice: "win" },
       { id: "user1", name: "Alice Johnson", betAmount: 75, initials: "AJ", isOwner: false, betChoice: "win" },
@@ -42,6 +44,8 @@ const mockMyPools = [
     myBet: 25,
     winnings: 87.5,
     matchDate: "2024-01-10",
+    owner: { id: "owner2", name: "Mike Jordan", initials: "MJ" },
+    inviteCode: "POOL2XYZ",
   },
 ];
 

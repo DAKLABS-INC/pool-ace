@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,11 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Users, Calendar, DollarSign, Trophy, Crown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Users, Calendar, DollarSign, Trophy, Crown, Share2, Copy, Check } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface PoolDetailsModalProps {
   isOpen: boolean;
@@ -18,22 +22,73 @@ interface PoolDetailsModalProps {
 }
 
 export const PoolDetailsModal: React.FC<PoolDetailsModalProps> = ({ isOpen, onClose, pool }) => {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
+
   if (!pool) return null;
+
+  const isOwner = user?.id === pool.owner?.id;
+
+  const handleCopyInviteCode = () => {
+    navigator.clipboard.writeText(pool.inviteCode);
+    setCopied(true);
+    toast({
+      title: "Copied!",
+      description: "Invite code copied to clipboard",
+    });
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSharePool = () => {
+    const shareUrl = `${window.location.origin}/pools/${pool.id}`;
+    navigator.clipboard.writeText(shareUrl);
+    toast({
+      title: "Link copied!",
+      description: "Pool link copied to clipboard",
+    });
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] flex flex-col">
         <DialogHeader className="flex-shrink-0">
-          <DialogTitle>{pool.title}</DialogTitle>
-          <DialogDescription>
-            <div className="flex items-center gap-2 mt-2">
-              <Badge variant="secondary">{pool.sport}</Badge>
-              {pool.isPrivate && <Badge variant="outline">Private</Badge>}
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <DialogTitle>{pool.title}</DialogTitle>
+              <DialogDescription>
+                <div className="flex items-center gap-2 mt-2">
+                  <Badge variant="secondary">{pool.sport}</Badge>
+                  {pool.isPrivate && <Badge variant="outline">Private</Badge>}
+                </div>
+              </DialogDescription>
             </div>
-          </DialogDescription>
+            <Button variant="outline" size="sm" onClick={handleSharePool}>
+              <Share2 className="h-4 w-4" />
+            </Button>
+          </div>
         </DialogHeader>
 
         <div className="space-y-6 overflow-y-auto scrollbar-hide pr-2 flex-1">
+          {/* Invite Code - Show to owner */}
+          {isOwner && pool.inviteCode && (
+            <div className="bg-primary/10 p-4 rounded-lg">
+              <h3 className="font-semibold mb-2 flex items-center gap-2">
+                <Share2 className="h-4 w-4" />
+                Pool Invite Code
+              </h3>
+              <div className="flex items-center gap-2">
+                <Input value={pool.inviteCode} readOnly className="font-mono text-sm" />
+                <Button variant="outline" size="icon" onClick={handleCopyInviteCode}>
+                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Share this code with others to invite them to your pool
+              </p>
+            </div>
+          )}
+
           {/* Pool Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="text-center p-3 bg-muted rounded-lg">
