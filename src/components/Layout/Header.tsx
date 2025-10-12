@@ -1,20 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Trophy, User, LogIn, UserPlus, Wallet, LogOut, History, RefreshCw, Moon, Sun, Plus } from "lucide-react";
+import {
+  Trophy,
+  User,
+  LogIn,
+  UserPlus,
+  Wallet,
+  LogOut,
+  History,
+  RefreshCw,
+  Moon,
+  Sun,
+  Plus,
+} from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from '@/contexts/AuthContext';
-import { AuthModal } from '@/components/Auth/AuthModal';
-import { AccountModal } from '@/components/Auth/AccountModal';
-import { CreatePoolModal } from '@/components/Pool/CreatePoolModal';
+import { useAuth } from "@/contexts/AuthContext";
+import { AuthModal } from "@/components/Auth/AuthModal";
+import { AccountModal } from "@/components/Auth/AccountModal";
+import { CreatePoolModal } from "@/components/Pool/CreatePoolModal";
 import { useTheme } from "next-themes";
 
 const Header = () => {
@@ -41,9 +53,9 @@ const Header = () => {
 
   const getUserInitials = (name: string) => {
     return name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
@@ -54,15 +66,23 @@ const Header = () => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
             <Trophy className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-foreground font-libertinus">PoolAce</span>
+            <span className="text-xl font-bold text-foreground text-primary">
+              PoolAce
+            </span>
           </Link>
-          
+
           <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/pools" className="text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/pools"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
               Browse Pools
             </Link>
             {user && (
-              <Link to="/my-pools" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                to="/my-pools"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
                 My Pools
               </Link>
             )}
@@ -73,8 +93,8 @@ const Header = () => {
               <>
                 <div className="hidden sm:flex items-center gap-2">
                   <Badge variant="outline" className="flex items-center gap-1">
-                    <Wallet className="h-3 w-3" />
-                    ${user.walletBalance.toLocaleString()}
+                    <Wallet className="h-3 w-3" />$
+                    {user.walletBalance.toLocaleString()}
                   </Badge>
                   <Button
                     variant="ghost"
@@ -85,12 +105,17 @@ const Header = () => {
                     <RefreshCw className="h-3 w-3" />
                   </Button>
                 </div>
-                
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Button
+                      variant="ghost"
+                      className="relative h-8 w-8 rounded-full"
+                    >
                       <Avatar className="h-8 w-8">
-                        <AvatarFallback>{getUserInitials(user.name)}</AvatarFallback>
+                        <AvatarFallback>
+                          {getUserInitials(user.name)}
+                        </AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
@@ -104,7 +129,9 @@ const Header = () => {
                       </div>
                     </div>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setCreatePoolModalOpen(true)}>
+                    <DropdownMenuItem
+                      onClick={() => setCreatePoolModalOpen(true)}
+                    >
                       <Plus className="mr-2 h-4 w-4" />
                       Create Pool
                     </DropdownMenuItem>
@@ -120,7 +147,11 @@ const Header = () => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        setTheme(theme === "dark" ? "light" : "dark")
+                      }
+                    >
                       {theme === "dark" ? (
                         <>
                           <Sun className="mr-2 h-4 w-4" />
@@ -143,7 +174,11 @@ const Header = () => {
               </>
             ) : (
               <div className="flex items-center space-x-2">
-                <Button variant="ghost" size="sm" onClick={() => setAuthModalOpen(true)}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setAuthModalOpen(true)}
+                >
                   <LogIn className="h-4 w-4 mr-2" />
                   Login
                 </Button>
@@ -157,19 +192,19 @@ const Header = () => {
         </div>
       </header>
 
-      <AuthModal 
-        isOpen={authModalOpen} 
+      <AuthModal
+        isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
       />
-      
-      <AccountModal 
-        isOpen={accountModalOpen} 
+
+      <AccountModal
+        isOpen={accountModalOpen}
         onClose={() => setAccountModalOpen(false)}
       />
-      
-      <CreatePoolModal 
-        isOpen={createPoolModalOpen} 
+
+      <CreatePoolModal
+        isOpen={createPoolModalOpen}
         onClose={() => setCreatePoolModalOpen(false)}
       />
     </>
