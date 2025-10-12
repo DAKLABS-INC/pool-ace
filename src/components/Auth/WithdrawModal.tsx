@@ -140,7 +140,7 @@ export const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose })
 
           {/* Transaction Summary */}
           {amount > 0 && (
-            <div className="space-y-3">
+            <div className="bg-muted p-4 rounded-lg space-y-3">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Info className="h-4 w-4" />
                 <span>Transaction Summary</span>
@@ -148,23 +148,42 @@ export const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose })
               
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span>Withdrawal Amount</span>
-                  <span>${amount.toFixed(2)}</span>
+                  <span className="text-muted-foreground">Withdrawal Amount</span>
+                  <span className="font-medium">${amount.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Transaction Fee</span>
-                  <span>${transactionFee.toFixed(2)}</span>
+                  <span className="text-muted-foreground">Transaction Fee</span>
+                  <span className="font-medium text-destructive">-${transactionFee.toFixed(2)}</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between font-medium">
-                  <span>Total Deduction</span>
+                  <span className="text-muted-foreground">Total Deducted from Wallet</span>
                   <span>${totalDeduction.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-muted-foreground">
-                  <span>Remaining Balance</span>
-                  <span>${(user.walletBalance - totalDeduction).toFixed(2)}</span>
+                <div className="h-px bg-border my-2" />
+                <div className="flex justify-between">
+                  <span className="font-medium">You'll receive:</span>
+                  <span className="font-bold text-primary text-lg">${amount.toFixed(2)}</span>
                 </div>
               </div>
+              
+              {amount > 0 && amount < minWithdraw && (
+                <div className="flex items-start gap-2 p-2 bg-destructive/10 rounded">
+                  <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+                  <p className="text-xs text-destructive">
+                    Minimum withdrawal amount is ${minWithdraw}
+                  </p>
+                </div>
+              )}
+              
+              {totalDeduction > user.walletBalance && (
+                <div className="flex items-start gap-2 p-2 bg-destructive/10 rounded">
+                  <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+                  <p className="text-xs text-destructive">
+                    Insufficient balance to cover withdrawal and fees
+                  </p>
+                </div>
+              )}
             </div>
           )}
 

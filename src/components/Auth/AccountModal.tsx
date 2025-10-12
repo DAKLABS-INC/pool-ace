@@ -137,6 +137,14 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                 <Badge variant="outline" className="text-xs">
                   Discount Credits
                 </Badge>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={refreshWallet}
+                  className="h-7 w-7 p-0 ml-auto"
+                >
+                  <RefreshCw className="h-3 w-3" />
+                </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-2">
                 Use DAK tokens to get discounts on pool entries and transactions
