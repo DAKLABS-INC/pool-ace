@@ -9,11 +9,12 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Trophy, User, LogIn, UserPlus, Wallet, LogOut, History, RefreshCw, Moon, Sun } from "lucide-react";
+import { Trophy, User, LogIn, UserPlus, Wallet, LogOut, History, RefreshCw, Moon, Sun, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthModal } from '@/components/Auth/AuthModal';
 import { AccountModal } from '@/components/Auth/AccountModal';
+import { CreatePoolModal } from '@/components/Pool/CreatePoolModal';
 import { useTheme } from "next-themes";
 
 const Header = () => {
@@ -21,6 +22,7 @@ const Header = () => {
   const { theme, setTheme } = useTheme();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [accountModalOpen, setAccountModalOpen] = useState(false);
+  const [createPoolModalOpen, setCreatePoolModalOpen] = useState(false);
   const [showAccountModal, setShowAccountModal] = useState(false);
 
   const handleLoginSuccess = () => {
@@ -60,14 +62,9 @@ const Header = () => {
               Browse Pools
             </Link>
             {user && (
-              <>
-                <Link to="/create" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Create Pool
-                </Link>
-                <Link to="/my-pools" className="text-muted-foreground hover:text-foreground transition-colors">
-                  My Pools
-                </Link>
-              </>
+              <Link to="/my-pools" className="text-muted-foreground hover:text-foreground transition-colors">
+                My Pools
+              </Link>
             )}
           </nav>
 
@@ -106,6 +103,11 @@ const Header = () => {
                         </p>
                       </div>
                     </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setCreatePoolModalOpen(true)}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Create Pool
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setAccountModalOpen(true)}>
                       <User className="mr-2 h-4 w-4" />
@@ -164,6 +166,11 @@ const Header = () => {
       <AccountModal 
         isOpen={accountModalOpen} 
         onClose={() => setAccountModalOpen(false)}
+      />
+      
+      <CreatePoolModal 
+        isOpen={createPoolModalOpen} 
+        onClose={() => setCreatePoolModalOpen(false)}
       />
     </>
   );
