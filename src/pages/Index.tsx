@@ -1,10 +1,25 @@
 import Layout from "@/components/Layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Trophy, Users, Shield, Zap, TrendingUp, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import Autoplay from "embla-carousel-autoplay";
+import footballImg from "@/assets/sports/football.jpg";
+import basketballImg from "@/assets/sports/basketball.jpg";
+import rugbyImg from "@/assets/sports/rugby.jpg";
+import tennisImg from "@/assets/sports/tennis.jpg";
+import baseballImg from "@/assets/sports/baseball.jpg";
 
 const Index = () => {
+  const sportsImages = [
+    { src: footballImg, alt: "Football action shot", sport: "Football" },
+    { src: basketballImg, alt: "Basketball game", sport: "Basketball" },
+    { src: rugbyImg, alt: "Rugby match", sport: "Rugby" },
+    { src: tennisImg, alt: "Tennis player", sport: "Tennis" },
+    { src: baseballImg, alt: "Baseball game", sport: "Baseball" },
+  ];
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -47,6 +62,54 @@ const Index = () => {
               <div className="text-sm text-muted-foreground">Support</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Sports Carousel Section */}
+      <section className="py-16 px-4 bg-gradient-to-b from-primary/5 to-background">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Experience Every Sport</h2>
+            <p className="text-xl text-muted-foreground">From football to tennis, all your favorite sports in one place</p>
+          </div>
+          
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            plugins={[
+              Autoplay({
+                delay: 3000,
+                stopOnInteraction: false,
+              }),
+            ]}
+            className="w-full"
+          >
+            <CarouselContent>
+              {sportsImages.map((image, index) => (
+                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                  <div className="p-2">
+                    <Card className="border-0 overflow-hidden group cursor-pointer">
+                      <div className="relative aspect-video overflow-hidden">
+                        <img
+                          src={image.src}
+                          alt={image.alt}
+                          className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+                        <div className="absolute bottom-0 left-0 right-0 p-6">
+                          <h3 className="text-2xl font-bold text-foreground drop-shadow-lg">
+                            {image.sport}
+                          </h3>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         </div>
       </section>
 
