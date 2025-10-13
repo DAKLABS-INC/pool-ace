@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Users, Calendar, DollarSign, Search } from "lucide-react";
+import { Users, Calendar, DollarSign, Search, TrendingUp, Trophy, Target } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const allMockPools = [
@@ -229,12 +229,92 @@ const Pools = () => {
     };
   }, [hasMore, loadMorePools]);
 
+  // Calculate metrics
+  const totalLocked = allMockPools.reduce((sum, pool) => sum + (pool.minDeposit * pool.participants), 0);
+  const totalParticipants = allMockPools.reduce((sum, pool) => sum + pool.participants, 0);
+  const avgPoolSize = (totalLocked / allMockPools.length).toFixed(0);
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Available Pools</h1>
           <p className="text-muted-foreground">Join existing pools or create your own</p>
+        </div>
+
+        {/* Metrics Dashboard */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Total Locked</p>
+                  <p className="text-3xl font-bold text-primary-glow">${totalLocked.toLocaleString()}</p>
+                </div>
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                  <DollarSign className="h-6 w-6 text-primary-glow" />
+                </div>
+              </div>
+              <div className="mt-2 flex items-center gap-1 text-xs text-primary">
+                <TrendingUp className="h-3 w-3" />
+                <span>+12.5% from last week</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Total Pools</p>
+                  <p className="text-3xl font-bold text-primary-glow">{allMockPools.length}</p>
+                </div>
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                  <Target className="h-6 w-6 text-primary-glow" />
+                </div>
+              </div>
+              <div className="mt-2 flex items-center gap-1 text-xs text-primary">
+                <TrendingUp className="h-3 w-3" />
+                <span>+3 new today</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Active Users</p>
+                  <p className="text-3xl font-bold text-primary-glow">{totalParticipants}</p>
+                </div>
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                  <Users className="h-6 w-6 text-primary-glow" />
+                </div>
+              </div>
+              <div className="mt-2 flex items-center gap-1 text-xs text-primary">
+                <TrendingUp className="h-3 w-3" />
+                <span>+8.2% this month</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Avg Pool Size</p>
+                  <p className="text-3xl font-bold text-primary-glow">${avgPoolSize}</p>
+                </div>
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                  <Trophy className="h-6 w-6 text-primary-glow" />
+                </div>
+              </div>
+              <div className="mt-2 flex items-center gap-1 text-xs text-primary">
+                <TrendingUp className="h-3 w-3" />
+                <span>Growing steadily</span>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Search Bar */}
