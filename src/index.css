@@ -118,3 +118,8 @@ All colors MUST be HSL.
 .scrollbar-hide::-webkit-scrollbar { 
   display: none;  /* Safari and Chrome */
 }
+
+/* Pause animation on hover */
+.pause:hover {
+  animation-play-state: paused;
+}
