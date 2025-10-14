@@ -376,7 +376,7 @@ const Pools = () => {
                   </div>
 
                   <div className="flex gap-2">
-                    <Button className="flex-1" size="sm" asChild>
+                    <Button className="flex-1" size="sm" variant="outline" asChild>
                       <Link to={`/pools/${pool.id}`}>
                         View Details
                       </Link>
