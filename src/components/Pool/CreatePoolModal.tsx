@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CreatePoolModalProps {
   isOpen: boolean;
@@ -25,7 +26,7 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">Create New Pool</DialogTitle>
           <DialogDescription>Set up your betting pool for an upcoming match</DialogDescription>
@@ -36,7 +37,8 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
             <CardTitle>Pool Configuration</CardTitle>
             <CardDescription>Configure your pool settings and match selection</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 px-0">
+          <ScrollArea className="h-[calc(90vh-180px)] pr-4">
+            <CardContent className="space-y-6 px-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="sport">Sport</Label>
@@ -135,10 +137,11 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
               </div>
             )}
 
-            <Button className="w-full" size="lg">
-              Create Pool
-            </Button>
-          </CardContent>
+              <Button className="w-full" size="lg">
+                Create Pool
+              </Button>
+            </CardContent>
+          </ScrollArea>
         </Card>
       </DialogContent>
     </Dialog>
