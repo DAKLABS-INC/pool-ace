@@ -38,7 +38,7 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
             <CardDescription>Configure your pool settings and match selection</CardDescription>
           </CardHeader>
           <ScrollArea className="h-[calc(90vh-180px)]">
-            <CardContent className="space-y-6 px-0 pr-4 pb-6">
+            <CardContent className="space-y-6 pl-1 pr-4 pb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="sport">Sport</Label>
