@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Users, Calendar, DollarSign, Search, TrendingUp, Trophy, Target, Flame } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { CreatePoolModal } from "@/components/Pool/CreatePoolModal";
 
 const allMockPools = [
   {
@@ -161,6 +162,7 @@ const Pools = () => {
   const [displayedPools, setDisplayedPools] = useState<typeof allMockPools>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [isCreatePoolOpen, setIsCreatePoolOpen] = useState(false);
   const observerTarget = useRef<HTMLDivElement>(null);
   const POOLS_PER_PAGE = 6;
 
@@ -355,7 +357,7 @@ const Pools = () => {
                         <p className="text-2xl font-bold text-primary-glow">$80</p>
                       </div>
                     </div>
-                    <Button className="w-full" size="sm">View Competition</Button>
+                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
                   </CardContent>
                 </Card>
               </CarouselItem>
@@ -389,7 +391,7 @@ const Pools = () => {
                         <p className="text-2xl font-bold text-primary-glow">$89</p>
                       </div>
                     </div>
-                    <Button className="w-full" size="sm">View Competition</Button>
+                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
                   </CardContent>
                 </Card>
               </CarouselItem>
@@ -423,7 +425,7 @@ const Pools = () => {
                         <p className="text-2xl font-bold text-primary-glow">$87</p>
                       </div>
                     </div>
-                    <Button className="w-full" size="sm">View Competition</Button>
+                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
                   </CardContent>
                 </Card>
               </CarouselItem>
@@ -457,7 +459,7 @@ const Pools = () => {
                         <p className="text-2xl font-bold text-primary-glow">$85</p>
                       </div>
                     </div>
-                    <Button className="w-full" size="sm">View Competition</Button>
+                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
                   </CardContent>
                 </Card>
               </CarouselItem>
@@ -493,75 +495,79 @@ const Pools = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayedPools.map((pool) => (
-            <Card key={pool.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex justify-between items-start mb-2">
-                  <Badge variant="secondary">{pool.sport}</Badge>
-                  {pool.isPrivate && <Badge variant="outline">Private</Badge>}
-                </div>
-                <CardTitle className="text-lg">{pool.title}</CardTitle>
-                <CardDescription>{pool.league}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center">
-                      <Users className="h-4 w-4 mr-2 text-muted-foreground" />
-                      <span>{pool.participants}/{pool.maxParticipants}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-                      <span>{pool.matchDate}</span>
-                    </div>
+        <div className="max-h-[800px] overflow-y-auto scrollbar-hide">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pr-2">
+            {displayedPools.map((pool) => (
+              <Card key={pool.id} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="flex justify-between items-start mb-2">
+                    <Badge variant="secondary">{pool.sport}</Badge>
+                    {pool.isPrivate && <Badge variant="outline">Private</Badge>}
                   </div>
-                  
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center">
-                      <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
-                      <span>Min: ${pool.minDeposit}</span>
+                  <CardTitle className="text-lg">{pool.title}</CardTitle>
+                  <CardDescription>{pool.league}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center">
+                        <Users className="h-4 w-4 mr-2 text-muted-foreground" />
+                        <span>{pool.participants}/{pool.maxParticipants}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+                        <span>{pool.matchDate}</span>
+                      </div>
                     </div>
-                    <span className="text-primary font-medium">{pool.winSplit}% winner</span>
-                  </div>
+                    
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center">
+                        <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
+                        <span>Min: ${pool.minDeposit}</span>
+                      </div>
+                      <span className="text-primary font-medium">{pool.winSplit}% winner</span>
+                    </div>
 
-                  <div className="flex gap-2">
-                    <Button className="flex-1" size="sm" variant="outline" asChild>
-                      <Link to={`/pools/${pool.id}`}>
-                        View Details
-                      </Link>
-                    </Button>
-                    <Button className="flex-1" size="sm" asChild>
-                      <Link to={`/pools/${pool.id}`}>
-                        Join Pool
-                      </Link>
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button className="flex-1" size="sm" variant="outline" asChild>
+                        <Link to={`/pools/${pool.id}`}>
+                          View Details
+                        </Link>
+                      </Button>
+                      <Button className="flex-1" size="sm" asChild>
+                        <Link to={`/pools/${pool.id}`}>
+                          Join Pool
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Loading indicator for infinite scroll */}
+          {hasMore && (
+            <div ref={observerTarget} className="text-center py-8">
+              <div className="text-muted-foreground">Loading more pools...</div>
+            </div>
+          )}
+
+          {!hasMore && displayedPools.length > 0 && (
+            <div className="text-center py-8 text-muted-foreground">
+              No more pools to load
+            </div>
+          )}
+
+          {displayedPools.length === 0 && !hasMore && (
+            <div className="text-center py-12 text-muted-foreground">
+              No pools found matching your search
+            </div>
+          )}
         </div>
-
-        {/* Loading indicator for infinite scroll */}
-        {hasMore && (
-          <div ref={observerTarget} className="text-center py-8">
-            <div className="text-muted-foreground">Loading more pools...</div>
-          </div>
-        )}
-
-        {!hasMore && displayedPools.length > 0 && (
-          <div className="text-center py-8 text-muted-foreground">
-            No more pools to load
-          </div>
-        )}
-
-        {displayedPools.length === 0 && !hasMore && (
-          <div className="text-center py-12 text-muted-foreground">
-            No pools found matching your search
-          </div>
-        )}
       </div>
+
+      <CreatePoolModal isOpen={isCreatePoolOpen} onClose={() => setIsCreatePoolOpen(false)} />
     </Layout>
   );
 };

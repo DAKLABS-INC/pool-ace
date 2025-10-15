@@ -78,9 +78,24 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
                   <SelectValue placeholder="Select match" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="man-city-arsenal">Man City vs Arsenal</SelectItem>
-                  <SelectItem value="liverpool-chelsea">Liverpool vs Chelsea</SelectItem>
-                  <SelectItem value="lakers-warriors">Lakers vs Warriors</SelectItem>
+                  <SelectItem value="man-city-arsenal">
+                    <div className="flex items-center justify-between w-full gap-8">
+                      <span>Man City vs Arsenal</span>
+                      <span className="text-xs text-muted-foreground ml-auto">Jan 15, 3:00 PM</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="liverpool-chelsea">
+                    <div className="flex items-center justify-between w-full gap-8">
+                      <span>Liverpool vs Chelsea</span>
+                      <span className="text-xs text-muted-foreground ml-auto">Jan 16, 5:30 PM</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="lakers-warriors">
+                    <div className="flex items-center justify-between w-full gap-8">
+                      <span>Lakers vs Warriors</span>
+                      <span className="text-xs text-muted-foreground ml-auto">Jan 17, 7:00 PM</span>
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
