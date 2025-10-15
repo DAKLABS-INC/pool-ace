@@ -4,8 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Users, Calendar, DollarSign, Search, TrendingUp, Trophy, Target } from "lucide-react";
+import { Users, Calendar, DollarSign, Search, TrendingUp, Trophy, Target, Flame } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const allMockPools = [
   {
@@ -315,6 +316,155 @@ const Pools = () => {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Featured Competitions Carousel */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Flame className="h-5 w-5 text-primary" />
+            <h2 className="text-2xl font-bold">Featured Competitions</h2>
+          </div>
+          <Carousel opts={{ align: "start", loop: true }} className="w-full">
+            <CarouselContent>
+              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge className="bg-primary/20 text-primary border-primary/30">Premier League</Badge>
+                      <Trophy className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-xl">EPL Championship</CardTitle>
+                    <CardDescription>Season-long competition</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
+                        <p className="text-2xl font-bold text-primary-glow">24</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
+                        <p className="text-2xl font-bold text-primary-glow">156</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
+                        <p className="text-2xl font-bold text-primary-glow">$12.4K</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
+                        <p className="text-2xl font-bold text-primary-glow">$80</p>
+                      </div>
+                    </div>
+                    <Button className="w-full" size="sm">View Competition</Button>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+
+              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge className="bg-primary/20 text-primary border-primary/30">NBA</Badge>
+                      <Trophy className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-xl">NBA Playoffs</CardTitle>
+                    <CardDescription>Knockout stage betting</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
+                        <p className="text-2xl font-bold text-primary-glow">18</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
+                        <p className="text-2xl font-bold text-primary-glow">92</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
+                        <p className="text-2xl font-bold text-primary-glow">$8.2K</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
+                        <p className="text-2xl font-bold text-primary-glow">$89</p>
+                      </div>
+                    </div>
+                    <Button className="w-full" size="sm">View Competition</Button>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+
+              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge className="bg-primary/20 text-primary border-primary/30">Champions League</Badge>
+                      <Trophy className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-xl">UCL Final Four</CardTitle>
+                    <CardDescription>Semi-finals & Final</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
+                        <p className="text-2xl font-bold text-primary-glow">31</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
+                        <p className="text-2xl font-bold text-primary-glow">214</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
+                        <p className="text-2xl font-bold text-primary-glow">$18.7K</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
+                        <p className="text-2xl font-bold text-primary-glow">$87</p>
+                      </div>
+                    </div>
+                    <Button className="w-full" size="sm">View Competition</Button>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+
+              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge className="bg-primary/20 text-primary border-primary/30">NFL</Badge>
+                      <Trophy className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-xl">Super Bowl LVIII</CardTitle>
+                    <CardDescription>Championship game</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
+                        <p className="text-2xl font-bold text-primary-glow">42</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
+                        <p className="text-2xl font-bold text-primary-glow">287</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
+                        <p className="text-2xl font-bold text-primary-glow">$24.5K</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
+                        <p className="text-2xl font-bold text-primary-glow">$85</p>
+                      </div>
+                    </div>
+                    <Button className="w-full" size="sm">View Competition</Button>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious className="-left-4" />
+            <CarouselNext className="-right-4" />
+          </Carousel>
         </div>
 
         {/* Search Bar */}
