@@ -340,21 +340,21 @@ const Pools = () => {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-primary/20">
                         <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
                         <p className="text-2xl font-bold text-primary-glow">24</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-accent-blue/20">
                         <p className="text-xs text-muted-foreground mb-1">Active Users</p>
-                        <p className="text-2xl font-bold text-primary-glow">156</p>
+                        <p className="text-2xl font-bold text-accent-blue">156</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-primary/20">
                         <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
                         <p className="text-2xl font-bold text-primary-glow">$12.4K</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-accent-purple/20">
                         <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
-                        <p className="text-2xl font-bold text-primary-glow">$80</p>
+                        <p className="text-2xl font-bold text-accent-purple">$80</p>
                       </div>
                     </div>
                     <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
@@ -374,21 +374,21 @@ const Pools = () => {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-accent-purple/20">
                         <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
-                        <p className="text-2xl font-bold text-primary-glow">18</p>
+                        <p className="text-2xl font-bold text-accent-purple">18</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-primary/20">
                         <p className="text-xs text-muted-foreground mb-1">Active Users</p>
                         <p className="text-2xl font-bold text-primary-glow">92</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-primary/20">
                         <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
                         <p className="text-2xl font-bold text-primary-glow">$8.2K</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-accent-blue/20">
                         <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
-                        <p className="text-2xl font-bold text-primary-glow">$89</p>
+                        <p className="text-2xl font-bold text-accent-blue">$89</p>
                       </div>
                     </div>
                     <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
@@ -408,19 +408,19 @@ const Pools = () => {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-accent-blue/20">
                         <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
-                        <p className="text-2xl font-bold text-primary-glow">31</p>
+                        <p className="text-2xl font-bold text-accent-blue">31</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-accent-purple/20">
                         <p className="text-xs text-muted-foreground mb-1">Active Users</p>
-                        <p className="text-2xl font-bold text-primary-glow">214</p>
+                        <p className="text-2xl font-bold text-accent-purple">214</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-primary/20">
                         <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
                         <p className="text-2xl font-bold text-primary-glow">$18.7K</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-primary/20">
                         <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
                         <p className="text-2xl font-bold text-primary-glow">$87</p>
                       </div>
@@ -442,21 +442,21 @@ const Pools = () => {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-primary/20">
                         <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
                         <p className="text-2xl font-bold text-primary-glow">42</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-accent-purple/20">
                         <p className="text-xs text-muted-foreground mb-1">Active Users</p>
-                        <p className="text-2xl font-bold text-primary-glow">287</p>
+                        <p className="text-2xl font-bold text-accent-purple">287</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-primary/20">
                         <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
                         <p className="text-2xl font-bold text-primary-glow">$24.5K</p>
                       </div>
-                      <div className="bg-background/50 rounded-lg p-3">
+                      <div className="bg-background/50 rounded-lg p-3 border border-accent-blue/20">
                         <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
-                        <p className="text-2xl font-bold text-primary-glow">$85</p>
+                        <p className="text-2xl font-bold text-accent-blue">$85</p>
                       </div>
                     </div>
                     <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
