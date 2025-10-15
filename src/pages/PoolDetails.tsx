@@ -239,27 +239,35 @@ const PoolDetails = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center p-3 bg-muted rounded-lg">
-                    <Users className="h-6 w-6 mx-auto mb-2 text-primary" />
-                    <div className="text-lg font-semibold">{pool.participants}/{pool.maxParticipants}</div>
+                  <div className="text-center p-4 border border-primary/30 bg-card/50 backdrop-blur rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2 shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                      <Users className="h-5 w-5 text-primary-glow" />
+                    </div>
+                    <div className="text-lg font-semibold text-primary-glow">{pool.participants}/{pool.maxParticipants}</div>
                     <div className="text-xs text-muted-foreground">Participants</div>
                   </div>
                   
-                  <div className="text-center p-3 bg-muted rounded-lg">
-                    <DollarSign className="h-6 w-6 mx-auto mb-2 text-primary" />
-                    <div className="text-lg font-semibold">${pool.totalPool}</div>
+                  <div className="text-center p-4 border border-primary/30 bg-card/50 backdrop-blur rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2 shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                      <DollarSign className="h-5 w-5 text-primary-glow" />
+                    </div>
+                    <div className="text-lg font-semibold text-primary-glow">${pool.totalPool}</div>
                     <div className="text-xs text-muted-foreground">Total Pool</div>
                   </div>
                   
-                  <div className="text-center p-3 bg-muted rounded-lg">
-                    <Trophy className="h-6 w-6 mx-auto mb-2 text-primary" />
-                    <div className="text-lg font-semibold">{pool.winSplit}%</div>
+                  <div className="text-center p-4 border border-primary/30 bg-card/50 backdrop-blur rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2 shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                      <Trophy className="h-5 w-5 text-primary-glow" />
+                    </div>
+                    <div className="text-lg font-semibold text-primary-glow">{pool.winSplit}%</div>
                     <div className="text-xs text-muted-foreground">Winner Split</div>
                   </div>
                   
-                  <div className="text-center p-3 bg-muted rounded-lg">
-                    <Calendar className="h-6 w-6 mx-auto mb-2 text-primary" />
-                    <div className="text-lg font-semibold">{pool.matchDate}</div>
+                  <div className="text-center p-4 border border-primary/30 bg-card/50 backdrop-blur rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2 shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                      <Calendar className="h-5 w-5 text-primary-glow" />
+                    </div>
+                    <div className="text-lg font-semibold text-primary-glow">{pool.matchDate}</div>
                     <div className="text-xs text-muted-foreground">Match Date</div>
                   </div>
                 </div>
