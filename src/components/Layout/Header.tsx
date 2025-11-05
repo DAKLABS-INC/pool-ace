@@ -9,13 +9,14 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Trophy, User, LogIn, UserPlus, Wallet, LogOut, History, RefreshCw, Moon, Sun, Plus } from "lucide-react";
+import { User, LogIn, UserPlus, Wallet, LogOut, History, RefreshCw, Moon, Sun, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthModal } from '@/components/Auth/AuthModal';
 import { AccountModal } from '@/components/Auth/AccountModal';
 import { CreatePoolModal } from '@/components/Pool/CreatePoolModal';
 import { useTheme } from "next-themes";
+import logo from '@/assets/logo.png';
 
 const Header = () => {
   const { user, logout, refreshWallet } = useAuth();
@@ -52,9 +53,9 @@ const Header = () => {
     <>
       <header className="border-b border-border bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
-            <Trophy className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-foreground font-libertinus">PoolAce</span>
+          <Link to="/" className="flex items-center space-x-3">
+            <img src={logo} alt="Pool Ace Logo" className="h-10 w-10" />
+            <span className="text-xl font-bold text-foreground font-libertinus">Pool Ace</span>
           </Link>
           
           <nav className="hidden md:flex items-center space-x-6">
