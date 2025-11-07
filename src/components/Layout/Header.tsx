@@ -54,8 +54,8 @@ const Header = () => {
       <header className="border-b border-border bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3">
-            <img src={logo} alt="Pool Ace Logo" className="h-10 w-10" />
-            <span className="text-xl font-bold text-foreground font-libertinus">Pool Ace</span>
+            <img src={logo} alt="Daksports Logo" className="h-10 w-10" />
+            <span className="text-xl font-bold text-foreground font-libertinus">Daksports</span>
           </Link>
           
           <nav className="hidden md:flex items-center space-x-6">
