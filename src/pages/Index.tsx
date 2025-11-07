@@ -10,6 +10,7 @@ import basketballImg from "@/assets/sports/basketball.jpg";
 import rugbyImg from "@/assets/sports/rugby.jpg";
 import tennisImg from "@/assets/sports/tennis.jpg";
 import baseballImg from "@/assets/sports/baseball.jpg";
+import logo from "@/assets/logo.png";
 
 const Index = () => {
   const sportsImages = [
@@ -26,9 +27,9 @@ const Index = () => {
       <section className="relative py-20 px-4 text-center bg-gradient-to-br from-background via-background to-primary/5">
         <div className="container mx-auto max-w-4xl">
           <div className="mb-8">
-            <Trophy className="h-16 w-16 text-primary mx-auto mb-6" />
+            <img src={logo} alt="DakSports" className="h-24 w-24 mx-auto mb-6" />
             <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent">
-              PoolAce
+              DakSports
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Create and join sports betting pools with friends. Secure, fair, and exciting.
@@ -117,7 +118,7 @@ const Index = () => {
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose PoolAce?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose DakSports?</h2>
             <p className="text-xl text-muted-foreground">Everything you need for the perfect betting pool experience</p>
           </div>
 
@@ -190,7 +191,7 @@ const Index = () => {
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Start Winning?</h2>
           <p className="text-xl text-muted-foreground mb-8">
-            Join thousands of sports fans who trust PoolAce for their betting pools.
+            Join thousands of sports fans who trust DakSports for their betting pools.
           </p>
           <Button asChild size="lg" className="text-lg px-8">
             <Link to="/pools">Get Started Now</Link>
