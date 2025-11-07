@@ -17,6 +17,7 @@ export default {
         'libertinus': ['Libertinus Serif', 'serif'],
         'kode': ['Kode Mono', 'monospace'],
         'sans': ['Kode Mono', 'monospace'],
+        'orbitron': ['Orbitron', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

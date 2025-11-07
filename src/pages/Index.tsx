@@ -27,8 +27,8 @@ const Index = () => {
       <section className="relative py-20 px-4 text-center bg-gradient-to-br from-background via-background to-primary/5">
         <div className="container mx-auto max-w-4xl">
           <div className="mb-8">
-            <img src={logo} alt="DakSports" className="h-24 w-24 mx-auto mb-6" />
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent">
+            <img src={logo} alt="DakSports" className="h-32 w-32 mx-auto mb-6" />
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-primary/80 bg-clip-text text-transparent font-orbitron">
               DakSports
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
