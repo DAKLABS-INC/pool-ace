@@ -27,10 +27,13 @@ All colors MUST be HSL.
     --popover: 250 35% 10%;
     --popover-foreground: 250 40% 98%;
 
-    --primary: 260 85% 55%;
+    --primary: 142 76% 55%;
     --primary-foreground: 250 40% 98%;
-    --primary-glow: 260 90% 65%;
-    --primary-bright: 260 95% 60%;
+    --primary-glow: 142 80% 65%;
+    --primary-bright: 142 85% 60%;
+    
+    --accent-purple: 260 85% 55%;
+    --accent-pink: 330 80% 60%;
 
     --secondary: 250 35% 15%;
     --secondary-foreground: 250 40% 98%;
@@ -38,7 +41,7 @@ All colors MUST be HSL.
     --muted: 250 35% 15%;
     --muted-foreground: 250 20% 65%;
 
-    --accent: 260 85% 55%;
+    --accent: 142 76% 55%;
     --accent-foreground: 250 40% 98%;
 
     --destructive: 0 62.8% 50%;
@@ -46,13 +49,13 @@ All colors MUST be HSL.
 
     --border: 250 35% 18%;
     --input: 250 35% 18%;
-    --ring: 260 85% 55%;
+    --ring: 142 76% 55%;
 
     --radius: 0.75rem;
     
-    --shadow-glow: 0 0 20px hsl(260 90% 65% / 0.5);
-    --shadow-glow-lg: 0 0 40px hsl(260 90% 65% / 0.6);
-    --border-glow: 0 0 10px hsl(260 90% 65% / 0.4);
+    --shadow-glow: 0 0 20px hsl(142 80% 65% / 0.5);
+    --shadow-glow-lg: 0 0 40px hsl(142 80% 65% / 0.6);
+    --border-glow: 0 0 10px hsl(142 80% 65% / 0.4);
 
     --sidebar-background: 0 0% 98%;
 
@@ -81,10 +84,13 @@ All colors MUST be HSL.
     --popover: 250 35% 8%;
     --popover-foreground: 250 40% 98%;
 
-    --primary: 260 85% 55%;
+    --primary: 142 76% 55%;
     --primary-foreground: 250 40% 98%;
-    --primary-glow: 260 90% 65%;
-    --primary-bright: 260 95% 60%;
+    --primary-glow: 142 80% 65%;
+    --primary-bright: 142 85% 60%;
+    
+    --accent-purple: 260 85% 55%;
+    --accent-pink: 330 80% 60%;
 
     --secondary: 250 35% 12%;
     --secondary-foreground: 250 40% 98%;
@@ -92,7 +98,7 @@ All colors MUST be HSL.
     --muted: 250 35% 12%;
     --muted-foreground: 250 20% 65%;
 
-    --accent: 260 85% 55%;
+    --accent: 142 76% 55%;
     --accent-foreground: 250 40% 98%;
 
     --destructive: 0 62.8% 50%;
@@ -100,11 +106,11 @@ All colors MUST be HSL.
 
     --border: 250 35% 15%;
     --input: 250 35% 15%;
-    --ring: 260 85% 55%;
+    --ring: 142 76% 55%;
     
-    --shadow-glow: 0 0 20px hsl(260 90% 65% / 0.5);
-    --shadow-glow-lg: 0 0 40px hsl(260 90% 65% / 0.6);
-    --border-glow: 0 0 10px hsl(260 90% 65% / 0.4);
+    --shadow-glow: 0 0 20px hsl(142 80% 65% / 0.5);
+    --shadow-glow-lg: 0 0 40px hsl(142 80% 65% / 0.6);
+    --border-glow: 0 0 10px hsl(142 80% 65% / 0.4);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
