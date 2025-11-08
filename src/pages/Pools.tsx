@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { CreatePoolModal } from "@/components/Pool/CreatePoolModal";
 import { LivePoolCard } from "@/components/Pool/LivePoolCard";
+import Autoplay from "embla-carousel-autoplay";
 
 const allMockPools = [
   {
@@ -410,8 +411,16 @@ const Pools = () => {
               <Radio className="h-5 w-5 text-destructive animate-pulse" />
               <h2 className="text-2xl font-bold">Live Pools</h2>
             </div>
-            <Carousel opts={{ align: "start", loop: true }} className="w-full">
-              <CarouselContent>
+            <Carousel 
+              opts={{ align: "start", loop: true }} 
+              plugins={[
+                Autoplay({
+                  delay: 5000,
+                }),
+              ]}
+              className="w-full"
+            >
+              <CarouselContent className="h-[420px]">
                 <CarouselItem>
                   <LivePoolCard pool={{
                     id: 1,
@@ -520,9 +529,9 @@ const Pools = () => {
         <div className="max-h-[800px] overflow-y-auto scrollbar-hide">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pr-2">
             {displayedPools.map((pool) => (
-              <Link key={pool.id} to={`/pools/${pool.id}`} className="block">
-                <Card className="hover:shadow-lg hover:border-primary/50 transition-all duration-300 cursor-pointer group">
-                  <CardHeader>
+              <Link key={pool.id} to={`/pools/${pool.id}`} className="block h-full">
+                <Card className="hover:shadow-lg hover:border-primary/50 transition-all duration-300 cursor-pointer group h-full flex flex-col">
+                  <CardHeader className="flex-shrink-0">
                     <div className="flex justify-between items-start mb-2">
                       <Badge variant="secondary">{pool.sport}</Badge>
                       {pool.isPrivate && <Badge variant="outline">Private</Badge>}
@@ -530,8 +539,8 @@ const Pools = () => {
                     <CardTitle className="text-lg group-hover:text-primary transition-colors">{pool.title}</CardTitle>
                     <CardDescription>{pool.league}</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
+                  <CardContent className="flex-grow flex items-end">
+                    <div className="space-y-3 w-full">
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center">
                           <Users className="h-4 w-4 mr-2 text-muted-foreground" />
