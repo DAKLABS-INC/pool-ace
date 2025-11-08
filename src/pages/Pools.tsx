@@ -4,10 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Users, Calendar, DollarSign, Search, TrendingUp, Trophy, Target, Flame } from "lucide-react";
+import { Users, Calendar, DollarSign, Search, TrendingUp, Trophy, Target, Flame, Radio } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { CreatePoolModal } from "@/components/Pool/CreatePoolModal";
+import { LivePoolCard } from "@/components/Pool/LivePoolCard";
 
 const allMockPools = [
   {
@@ -320,15 +321,17 @@ const Pools = () => {
           </Card>
         </div>
 
-        {/* Featured Competitions Carousel */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Flame className="h-5 w-5 text-primary" />
-            <h2 className="text-2xl font-bold">Featured Competitions</h2>
-          </div>
-          <Carousel opts={{ align: "start", loop: true }} className="w-full">
-            <CarouselContent>
-              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+        {/* Featured Competitions and Live Pools */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Featured Competitions Carousel */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Flame className="h-5 w-5 text-primary" />
+              <h2 className="text-2xl font-bold">Featured Competitions</h2>
+            </div>
+            <Carousel opts={{ align: "start", loop: true }} className="w-full">
+              <CarouselContent>
+                <CarouselItem>
                 <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-2">
@@ -362,7 +365,7 @@ const Pools = () => {
                 </Card>
               </CarouselItem>
 
-              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+              <CarouselItem>
                 <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-2">
@@ -395,78 +398,61 @@ const Pools = () => {
                   </CardContent>
                 </Card>
               </CarouselItem>
-
-              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge className="bg-primary/20 text-primary border-primary/30">Champions League</Badge>
-                      <Trophy className="h-5 w-5 text-primary" />
-                    </div>
-                    <CardTitle className="text-xl">UCL Final Four</CardTitle>
-                    <CardDescription>Semi-finals & Final</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
-                        <p className="text-2xl font-bold text-primary-glow">31</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
-                        <p className="text-2xl font-bold text-primary-glow">214</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
-                        <p className="text-2xl font-bold text-primary-glow">$18.7K</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
-                        <p className="text-2xl font-bold text-primary-glow">$87</p>
-                      </div>
-                    </div>
-                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-
-              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge className="bg-primary/20 text-primary border-primary/30">NFL</Badge>
-                      <Trophy className="h-5 w-5 text-primary" />
-                    </div>
-                    <CardTitle className="text-xl">Super Bowl LVIII</CardTitle>
-                    <CardDescription>Championship game</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
-                        <p className="text-2xl font-bold text-primary-glow">42</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
-                        <p className="text-2xl font-bold text-primary-glow">287</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
-                        <p className="text-2xl font-bold text-primary-glow">$24.5K</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
-                        <p className="text-2xl font-bold text-primary-glow">$85</p>
-                      </div>
-                    </div>
-                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
             </CarouselContent>
             <CarouselPrevious className="-left-4" />
             <CarouselNext className="-right-4" />
           </Carousel>
+          </div>
+
+          {/* Live Pools Section */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Radio className="h-5 w-5 text-destructive animate-pulse" />
+              <h2 className="text-2xl font-bold">Live Pools</h2>
+            </div>
+            <Carousel opts={{ align: "start", loop: true }} className="w-full">
+              <CarouselContent>
+                <CarouselItem>
+                  <LivePoolCard pool={{
+                    id: 1,
+                    title: "Lakers vs Warriors - Final Quarter",
+                    sport: "NBA",
+                    currentScore: "98-95",
+                    participants: 45,
+                    totalStaked: 3250,
+                    timeRemaining: "8:23",
+                    liveOdds: "Lakers -3.5"
+                  }} />
+                </CarouselItem>
+                <CarouselItem>
+                  <LivePoolCard pool={{
+                    id: 2,
+                    title: "Man City vs Arsenal - 2nd Half",
+                    sport: "Premier League",
+                    currentScore: "2-1",
+                    participants: 67,
+                    totalStaked: 5100,
+                    timeRemaining: "38:45",
+                    liveOdds: "Draw 2.8"
+                  }} />
+                </CarouselItem>
+                <CarouselItem>
+                  <LivePoolCard pool={{
+                    id: 3,
+                    title: "Patriots vs Chiefs - Q3",
+                    sport: "NFL",
+                    currentScore: "21-17",
+                    participants: 52,
+                    totalStaked: 4200,
+                    timeRemaining: "11:30",
+                    liveOdds: "Over 48.5"
+                  }} />
+                </CarouselItem>
+              </CarouselContent>
+              <CarouselPrevious className="-left-4" />
+              <CarouselNext className="-right-4" />
+            </Carousel>
+          </div>
         </div>
 
         {/* Search Bar */}
