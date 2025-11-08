@@ -448,6 +448,42 @@ const Pools = () => {
                     liveOdds: "Over 48.5"
                   }} />
                 </CarouselItem>
+                <CarouselItem>
+                  <LivePoolCard pool={{
+                    id: 4,
+                    title: "Real Madrid vs Barcelona - El Clasico",
+                    sport: "La Liga",
+                    currentScore: "1-1",
+                    participants: 89,
+                    totalStaked: 7800,
+                    timeRemaining: "52:15",
+                    liveOdds: "BTTS 1.65"
+                  }} />
+                </CarouselItem>
+                <CarouselItem>
+                  <LivePoolCard pool={{
+                    id: 5,
+                    title: "Celtics vs Heat - NBA Finals",
+                    sport: "NBA",
+                    currentScore: "87-82",
+                    participants: 73,
+                    totalStaked: 6200,
+                    timeRemaining: "14:56",
+                    liveOdds: "Celtics -5.5"
+                  }} />
+                </CarouselItem>
+                <CarouselItem>
+                  <LivePoolCard pool={{
+                    id: 6,
+                    title: "Djokovic vs Nadal - Grand Slam",
+                    sport: "Tennis",
+                    currentScore: "6-4, 3-5",
+                    participants: 34,
+                    totalStaked: 2900,
+                    timeRemaining: "Live Set 2",
+                    liveOdds: "Nadal 2.10"
+                  }} />
+                </CarouselItem>
               </CarouselContent>
               <CarouselPrevious className="-left-4" />
               <CarouselNext className="-right-4" />
@@ -484,51 +520,40 @@ const Pools = () => {
         <div className="max-h-[800px] overflow-y-auto scrollbar-hide">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pr-2">
             {displayedPools.map((pool) => (
-              <Card key={pool.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex justify-between items-start mb-2">
-                    <Badge variant="secondary">{pool.sport}</Badge>
-                    {pool.isPrivate && <Badge variant="outline">Private</Badge>}
-                  </div>
-                  <CardTitle className="text-lg">{pool.title}</CardTitle>
-                  <CardDescription>{pool.league}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center">
-                        <Users className="h-4 w-4 mr-2 text-muted-foreground" />
-                        <span>{pool.participants}/{pool.maxParticipants}</span>
+              <Link key={pool.id} to={`/pools/${pool.id}`} className="block">
+                <Card className="hover:shadow-lg hover:border-primary/50 transition-all duration-300 cursor-pointer group">
+                  <CardHeader>
+                    <div className="flex justify-between items-start mb-2">
+                      <Badge variant="secondary">{pool.sport}</Badge>
+                      {pool.isPrivate && <Badge variant="outline">Private</Badge>}
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">{pool.title}</CardTitle>
+                    <CardDescription>{pool.league}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center">
+                          <Users className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span>{pool.participants}/{pool.maxParticipants}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span>{pool.matchDate}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-                        <span>{pool.matchDate}</span>
+                      
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center">
+                          <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span>Min: ${pool.minDeposit}</span>
+                        </div>
+                        <span className="text-primary font-medium">{pool.winSplit}% winner</span>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center">
-                        <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
-                        <span>Min: ${pool.minDeposit}</span>
-                      </div>
-                      <span className="text-primary font-medium">{pool.winSplit}% winner</span>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Button className="flex-1" size="sm" variant="outline" asChild>
-                        <Link to={`/pools/${pool.id}`}>
-                          View Details
-                        </Link>
-                      </Button>
-                      <Button className="flex-1" size="sm" asChild>
-                        <Link to={`/pools/${pool.id}`}>
-                          Join Pool
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
 
