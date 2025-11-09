@@ -37,12 +37,12 @@ export const LivePoolCard = ({ pool }: LivePoolCardProps) => {
         {/* Front */}
         <Card className={`absolute inset-0 border-primary/50 bg-gradient-to-br from-card via-card to-primary/10 backface-hidden
           shadow-[0_0_30px_rgba(34,197,94,0.4)] hover:shadow-[0_0_40px_rgba(34,197,94,0.6)]
-          animate-bounce-slow ${isFlipped ? 'invisible' : 'visible'}`}
+          ${isFlipped ? 'invisible' : 'visible'}`}
         >
           <CardHeader>
             <div className="flex items-center justify-between mb-2">
-              <Badge className="bg-destructive/20 text-destructive border-destructive/30 animate-pulse">
-                LIVE
+              <Badge className="bg-primary/20 text-primary border-primary/30 animate-pulse">
+                TRENDING
               </Badge>
               <TrendingUp className="h-4 w-4 text-primary animate-pulse" />
             </div>
@@ -76,12 +76,12 @@ export const LivePoolCard = ({ pool }: LivePoolCardProps) => {
         {/* Back */}
         <Card className={`absolute inset-0 border-primary/50 bg-gradient-to-br from-primary/10 via-card to-accent-purple/10 rotate-y-180 backface-hidden
           shadow-[0_0_30px_rgba(34,197,94,0.4)] hover:shadow-[0_0_40px_rgba(34,197,94,0.6)]
-          animate-bounce-slow ${!isFlipped ? 'invisible' : 'visible'}`}
+          ${!isFlipped ? 'invisible' : 'visible'}`}
         >
           <CardHeader>
             <div className="flex items-center justify-between mb-2">
-              <Badge className="bg-destructive/20 text-destructive border-destructive/30 animate-pulse">
-                LIVE STATS
+              <Badge className="bg-primary/20 text-primary border-primary/30 animate-pulse">
+                TRENDING STATS
               </Badge>
               <Clock className="h-4 w-4 text-primary animate-pulse" />
             </div>
