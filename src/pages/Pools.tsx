@@ -10,6 +10,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { CreatePoolModal } from "@/components/Pool/CreatePoolModal";
 import { LivePoolCard } from "@/components/Pool/LivePoolCard";
 import Autoplay from "embla-carousel-autoplay";
+import { PoolFilters, PoolFilterValues } from "@/components/Pool/PoolFilters";
 
 const allMockPools = [
   {
@@ -168,10 +169,21 @@ const Pools = () => {
   const observerTarget = useRef<HTMLDivElement>(null);
   const POOLS_PER_PAGE = 6;
 
+  // Filter state
+  const [filters, setFilters] = useState<PoolFilterValues>({
+    minParticipants: 0,
+    maxParticipants: 100,
+    minWinPercentage: 0,
+    maxWinPercentage: 100,
+    dateFilter: "all",
+    minDeposit: 0,
+    maxDeposit: 1000,
+  });
+
   // Get unique sports for filters
   const availableSports = ["all", ...Array.from(new Set(allMockPools.map(pool => pool.sport)))];
 
-  // Filter pools based on search query and sport
+  // Filter pools based on search query, sport, and advanced filters
   const filteredPools = allMockPools.filter(pool => {
     const matchesSearch = pool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pool.sport.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -179,7 +191,47 @@ const Pools = () => {
     
     const matchesSport = selectedSport === "all" || pool.sport === selectedSport;
     
-    return matchesSearch && matchesSport;
+    // Advanced filters
+    const matchesParticipants = pool.participants >= filters.minParticipants && 
+                                pool.participants <= filters.maxParticipants;
+    
+    const matchesWinPercentage = pool.winSplit >= filters.minWinPercentage && 
+                                 pool.winSplit <= filters.maxWinPercentage;
+    
+    const matchesDeposit = pool.minDeposit >= filters.minDeposit && 
+                           pool.minDeposit <= filters.maxDeposit;
+    
+    // Date filter logic
+    let matchesDate = true;
+    if (filters.dateFilter !== "all") {
+      const poolDate = new Date(pool.matchDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      switch (filters.dateFilter) {
+        case "today":
+          matchesDate = poolDate.toDateString() === today.toDateString();
+          break;
+        case "tomorrow":
+          const tomorrow = new Date(today);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          matchesDate = poolDate.toDateString() === tomorrow.toDateString();
+          break;
+        case "week":
+          const weekEnd = new Date(today);
+          weekEnd.setDate(weekEnd.getDate() + 7);
+          matchesDate = poolDate >= today && poolDate <= weekEnd;
+          break;
+        case "month":
+          const monthEnd = new Date(today);
+          monthEnd.setMonth(monthEnd.getMonth() + 1);
+          matchesDate = poolDate >= today && poolDate <= monthEnd;
+          break;
+      }
+    }
+    
+    return matchesSearch && matchesSport && matchesParticipants && 
+           matchesWinPercentage && matchesDeposit && matchesDate;
   });
 
   // Load more pools
@@ -202,7 +254,7 @@ const Pools = () => {
     setDisplayedPools([]);
     setPage(1);
     setHasMore(true);
-  }, [searchQuery, selectedSport]);
+  }, [searchQuery, selectedSport, filters]);
 
   // Initial load and load more
   useEffect(() => {
@@ -420,7 +472,7 @@ const Pools = () => {
               ]}
               className="w-full"
             >
-              <CarouselContent>
+              <CarouselContent className="h-[420px]">
                 <CarouselItem>
                   <LivePoolCard pool={{
                     id: 1,
@@ -448,18 +500,6 @@ const Pools = () => {
                 <CarouselItem>
                   <LivePoolCard pool={{
                     id: 3,
-                    title: "Patriots vs Chiefs - Q3",
-                    sport: "NFL",
-                    currentScore: "21-17",
-                    participants: 52,
-                    totalStaked: 4200,
-                    timeRemaining: "11:30",
-                    liveOdds: "Over 48.5"
-                  }} />
-                </CarouselItem>
-                <CarouselItem>
-                  <LivePoolCard pool={{
-                    id: 4,
                     title: "Real Madrid vs Barcelona - El Clasico",
                     sport: "La Liga",
                     currentScore: "1-1",
@@ -469,30 +509,6 @@ const Pools = () => {
                     liveOdds: "BTTS 1.65"
                   }} />
                 </CarouselItem>
-                <CarouselItem>
-                  <LivePoolCard pool={{
-                    id: 5,
-                    title: "Celtics vs Heat - NBA Finals",
-                    sport: "NBA",
-                    currentScore: "87-82",
-                    participants: 73,
-                    totalStaked: 6200,
-                    timeRemaining: "14:56",
-                    liveOdds: "Celtics -5.5"
-                  }} />
-                </CarouselItem>
-                <CarouselItem>
-                  <LivePoolCard pool={{
-                    id: 6,
-                    title: "Djokovic vs Nadal - Grand Slam",
-                    sport: "Tennis",
-                    currentScore: "6-4, 3-5",
-                    participants: 34,
-                    totalStaked: 2900,
-                    timeRemaining: "Live Set 2",
-                    liveOdds: "Nadal 2.10"
-                  }} />
-                </CarouselItem>
               </CarouselContent>
               <CarouselPrevious className="-left-4" />
               <CarouselNext className="-right-4" />
@@ -500,15 +516,30 @@ const Pools = () => {
           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="mb-4 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="Search by title, sport, or league..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+        {/* Search Bar and Filters */}
+        <div className="space-y-3 mb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search by title, sport, or league..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <PoolFilters 
+            filters={filters}
+            onFiltersChange={setFilters}
+            onClearFilters={() => setFilters({
+              minParticipants: 0,
+              maxParticipants: 100,
+              minWinPercentage: 0,
+              maxWinPercentage: 100,
+              dateFilter: "all",
+              minDeposit: 0,
+              maxDeposit: 1000,
+            })}
           />
         </div>
 
