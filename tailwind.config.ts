@@ -17,6 +17,7 @@ export default {
         'libertinus': ['Libertinus Serif', 'serif'],
         'kode': ['Kode Mono', 'monospace'],
         'sans': ['Kode Mono', 'monospace'],
+        'orbitron': ['Orbitron', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -45,6 +46,8 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          purple: "hsl(var(--accent-purple))",
+          pink: "hsl(var(--accent-pink))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -96,6 +99,7 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         marquee: "marquee 40s linear infinite",
+        "bounce-slow": "bounce 3s ease-in-out infinite",
       },
     },
   },

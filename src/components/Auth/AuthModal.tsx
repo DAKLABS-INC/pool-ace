@@ -42,7 +42,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLoginSu
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
-          <DialogTitle>Welcome to PoolAce</DialogTitle>
+          <DialogTitle>Welcome to DakSports</DialogTitle>
           <DialogDescription>
             Sign in to your account or create a new one to get started.
           </DialogDescription>
