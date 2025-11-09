@@ -420,7 +420,7 @@ const Pools = () => {
               ]}
               className="w-full"
             >
-              <CarouselContent className="h-[420px]">
+              <CarouselContent>
                 <CarouselItem>
                   <LivePoolCard pool={{
                     id: 1,
