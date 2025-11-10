@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { TrendingUp, Users, DollarSign, Clock, Activity, Target } from "lucide-react";
 import { useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
@@ -100,6 +101,9 @@ export const LivePoolCard = ({ pool }: LivePoolCardProps) => {
               <p className="text-xs text-muted-foreground mb-1">Current Odds</p>
               <p className="text-xl font-bold text-primary-glow">{pool.liveOdds}</p>
             </div>
+            <Button className="w-full shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)]" size="sm">
+              Join Pool
+            </Button>
           </CardContent>
         </Card>
 
@@ -175,6 +179,9 @@ export const LivePoolCard = ({ pool }: LivePoolCardProps) => {
               </span>
               <TrendingUp className="h-3 w-3 text-primary" />
             </div>
+            <Button className="w-full shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.5)]" size="sm">
+              Join Pool
+            </Button>
           </CardContent>
         </Card>
       </div>

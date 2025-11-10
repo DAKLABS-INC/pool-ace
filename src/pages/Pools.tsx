@@ -299,6 +299,144 @@ const Pools = () => {
           <p className="text-muted-foreground">Join existing pools or create your own</p>
         </div>
 
+        {/* Analytics Dashboard and Trending Pools Side by Side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Metrics Dashboard - 2x2 Grid */}
+          <div>
+            <div className="grid grid-cols-2 gap-4">
+              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in">
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">Total Locked</p>
+                      <p className="text-3xl font-bold text-primary-glow">${totalLocked.toLocaleString()}</p>
+                    </div>
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                      <DollarSign className="h-6 w-6 text-primary-glow" />
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center gap-1 text-xs text-primary">
+                    <TrendingUp className="h-3 w-3" />
+                    <span>+12.5% from last week</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">Total Pools</p>
+                      <p className="text-3xl font-bold text-primary-glow">{allMockPools.length}</p>
+                    </div>
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                      <Target className="h-6 w-6 text-primary-glow" />
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center gap-1 text-xs text-primary">
+                    <TrendingUp className="h-3 w-3" />
+                    <span>+3 new today</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">Active Users</p>
+                      <p className="text-3xl font-bold text-primary-glow">{totalParticipants}</p>
+                    </div>
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                      <Users className="h-6 w-6 text-primary-glow" />
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center gap-1 text-xs text-primary">
+                    <TrendingUp className="h-3 w-3" />
+                    <span>+8.2% this month</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">Avg Pool Size</p>
+                      <p className="text-3xl font-bold text-primary-glow">${avgPoolSize}</p>
+                    </div>
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                      <Trophy className="h-6 w-6 text-primary-glow" />
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center gap-1 text-xs text-primary">
+                    <TrendingUp className="h-3 w-3" />
+                    <span>Growing steadily</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Trending Pools Section */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingUp className="h-5 w-5 text-primary animate-pulse" />
+              <h2 className="text-2xl font-bold">Trending Pools</h2>
+            </div>
+            <Carousel 
+              opts={{ align: "start", loop: true }} 
+              plugins={[
+                Autoplay({
+                  delay: 10000,
+                }),
+              ]}
+              className="w-full"
+            >
+              <CarouselContent className="h-[350px]">
+                <CarouselItem>
+                  <LivePoolCard pool={{
+                    id: 1,
+                    title: "Lakers vs Warriors - Final Quarter",
+                    sport: "NBA",
+                    currentScore: "98-95",
+                    participants: 45,
+                    totalStaked: 3250,
+                    timeRemaining: "8:23",
+                    liveOdds: "Lakers -3.5"
+                  }} />
+                </CarouselItem>
+                <CarouselItem>
+                  <LivePoolCard pool={{
+                    id: 2,
+                    title: "Man City vs Arsenal - 2nd Half",
+                    sport: "Premier League",
+                    currentScore: "2-1",
+                    participants: 67,
+                    totalStaked: 5100,
+                    timeRemaining: "38:45",
+                    liveOdds: "Draw 2.8"
+                  }} />
+                </CarouselItem>
+                <CarouselItem>
+                  <LivePoolCard pool={{
+                    id: 3,
+                    title: "Real Madrid vs Barcelona - El Clasico",
+                    sport: "La Liga",
+                    currentScore: "1-1",
+                    participants: 89,
+                    totalStaked: 7800,
+                    timeRemaining: "52:15",
+                    liveOdds: "BTTS 1.65"
+                  }} />
+                </CarouselItem>
+              </CarouselContent>
+              <CarouselPrevious className="-left-4" />
+              <CarouselNext className="-right-4" />
+            </Carousel>
+          </div>
+        </div>
+
         {/* Featured Competitions Carousel - Full Width */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
@@ -412,144 +550,6 @@ const Pools = () => {
             <CarouselPrevious className="-left-4" />
             <CarouselNext className="-right-4" />
           </Carousel>
-        </div>
-
-        {/* Analytics Dashboard and Trending Pools Side by Side */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Metrics Dashboard - 2x2 Grid */}
-          <div>
-            <div className="grid grid-cols-2 gap-4">
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in">
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Total Locked</p>
-                      <p className="text-3xl font-bold text-primary-glow">${totalLocked.toLocaleString()}</p>
-                    </div>
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                      <DollarSign className="h-6 w-6 text-primary-glow" />
-                    </div>
-                  </div>
-                  <div className="mt-2 flex items-center gap-1 text-xs text-primary">
-                    <TrendingUp className="h-3 w-3" />
-                    <span>+12.5% from last week</span>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Total Pools</p>
-                      <p className="text-3xl font-bold text-primary-glow">{allMockPools.length}</p>
-                    </div>
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                      <Target className="h-6 w-6 text-primary-glow" />
-                    </div>
-                  </div>
-                  <div className="mt-2 flex items-center gap-1 text-xs text-primary">
-                    <TrendingUp className="h-3 w-3" />
-                    <span>+3 new today</span>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Active Users</p>
-                      <p className="text-3xl font-bold text-primary-glow">{totalParticipants}</p>
-                    </div>
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                      <Users className="h-6 w-6 text-primary-glow" />
-                    </div>
-                  </div>
-                  <div className="mt-2 flex items-center gap-1 text-xs text-primary">
-                    <TrendingUp className="h-3 w-3" />
-                    <span>+8.2% this month</span>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Avg Pool Size</p>
-                      <p className="text-3xl font-bold text-primary-glow">${avgPoolSize}</p>
-                    </div>
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                      <Trophy className="h-6 w-6 text-primary-glow" />
-                    </div>
-                  </div>
-                  <div className="mt-2 flex items-center gap-1 text-xs text-primary">
-                    <TrendingUp className="h-3 w-3" />
-                    <span>Growing steadily</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          {/* Trending Pools Section */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="h-5 w-5 text-primary animate-pulse" />
-              <h2 className="text-2xl font-bold">Trending Pools</h2>
-            </div>
-            <Carousel 
-              opts={{ align: "start", loop: true }} 
-              plugins={[
-                Autoplay({
-                  delay: 5000,
-                }),
-              ]}
-              className="w-full"
-            >
-              <CarouselContent className="h-[420px]">
-                <CarouselItem>
-                  <LivePoolCard pool={{
-                    id: 1,
-                    title: "Lakers vs Warriors - Final Quarter",
-                    sport: "NBA",
-                    currentScore: "98-95",
-                    participants: 45,
-                    totalStaked: 3250,
-                    timeRemaining: "8:23",
-                    liveOdds: "Lakers -3.5"
-                  }} />
-                </CarouselItem>
-                <CarouselItem>
-                  <LivePoolCard pool={{
-                    id: 2,
-                    title: "Man City vs Arsenal - 2nd Half",
-                    sport: "Premier League",
-                    currentScore: "2-1",
-                    participants: 67,
-                    totalStaked: 5100,
-                    timeRemaining: "38:45",
-                    liveOdds: "Draw 2.8"
-                  }} />
-                </CarouselItem>
-                <CarouselItem>
-                  <LivePoolCard pool={{
-                    id: 3,
-                    title: "Real Madrid vs Barcelona - El Clasico",
-                    sport: "La Liga",
-                    currentScore: "1-1",
-                    participants: 89,
-                    totalStaked: 7800,
-                    timeRemaining: "52:15",
-                    liveOdds: "BTTS 1.65"
-                  }} />
-                </CarouselItem>
-              </CarouselContent>
-              <CarouselPrevious className="-left-4" />
-              <CarouselNext className="-right-4" />
-            </Carousel>
-          </div>
         </div>
 
         {/* Search Bar and Filters */}
