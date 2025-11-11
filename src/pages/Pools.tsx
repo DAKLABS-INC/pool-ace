@@ -8,7 +8,7 @@ import { Users, Calendar, DollarSign, Search, TrendingUp, Trophy, Target, Flame,
 import { Link } from "react-router-dom";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { CreatePoolModal } from "@/components/Pool/CreatePoolModal";
-import { LivePoolCard } from "@/components/Pool/LivePoolCard";
+import { TrendingPoolCard } from "@/components/Pool/TrendingPoolCard";
 import Autoplay from "embla-carousel-autoplay";
 import { PoolFilters, PoolFilterValues } from "@/components/Pool/PoolFilters";
 
@@ -388,14 +388,14 @@ const Pools = () => {
               opts={{ align: "start", loop: true }} 
               plugins={[
                 Autoplay({
-                  delay: 10000,
+                  delay: 15000,
                 }),
               ]}
               className="w-full"
             >
               <CarouselContent className="h-[480px]">
                 <CarouselItem>
-                  <LivePoolCard pool={{
+                  <TrendingPoolCard pool={{
                     id: 1,
                     title: "Lakers vs Warriors - Final Quarter",
                     sport: "NBA",
@@ -407,7 +407,7 @@ const Pools = () => {
                   }} />
                 </CarouselItem>
                 <CarouselItem>
-                  <LivePoolCard pool={{
+                  <TrendingPoolCard pool={{
                     id: 2,
                     title: "Man City vs Arsenal - 2nd Half",
                     sport: "Premier League",
@@ -419,7 +419,7 @@ const Pools = () => {
                   }} />
                 </CarouselItem>
                 <CarouselItem>
-                  <LivePoolCard pool={{
+                  <TrendingPoolCard pool={{
                     id: 3,
                     title: "Real Madrid vs Barcelona - El Clasico",
                     sport: "La Liga",
