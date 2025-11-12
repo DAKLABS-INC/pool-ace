@@ -53,7 +53,7 @@ export const TrendingPoolCard = ({ pool }: TrendingPoolCardProps) => {
   };
 
   return (
-    <div className="perspective-1000 h-full">
+    <div className="perspective-1000 h-full min-h-[400px] md:min-h-[280px]">
       <div 
         className={`relative h-full transition-all duration-700 transform-style-3d ${
           isFlipped ? 'rotate-y-180' : ''
@@ -69,7 +69,7 @@ export const TrendingPoolCard = ({ pool }: TrendingPoolCardProps) => {
           before:absolute before:inset-0 before:rounded-lg before:p-[2px] before:bg-gradient-to-br before:from-primary/60 before:via-primary/30 before:to-transparent before:-z-10
           ${isFlipped ? 'invisible' : 'visible'}`}
         >
-          <CardHeader className="pb-2 pt-4 px-4">
+          <CardHeader className="pb-3 pt-4 px-4 md:pb-2">
             <div className="flex items-center justify-between mb-2">
               <Badge className="bg-primary/20 text-primary border-primary/40 animate-pulse shadow-[0_0_20px_rgba(34,197,94,0.7)] text-[10px] px-2 py-0.5">
                 <Activity className="h-2.5 w-2.5 mr-1 animate-pulse" />
@@ -83,9 +83,9 @@ export const TrendingPoolCard = ({ pool }: TrendingPoolCardProps) => {
             <CardTitle className="text-base leading-tight">{pool.title}</CardTitle>
             <p className="text-xs text-muted-foreground">{pool.sport}</p>
           </CardHeader>
-          <CardContent className="space-y-2.5 pt-0 px-4 pb-4">
-            {/* Active Bets & Pool Value */}
-            <div className="grid grid-cols-2 gap-2">
+          <CardContent className="space-y-3 pt-0 px-4 pb-4 md:space-y-0 md:grid md:grid-cols-[1fr_2fr_1fr] md:gap-4 md:items-center">
+            {/* Left Column: Active Bets & Pool Value */}
+            <div className="space-y-2">
               <div className="bg-background/70 rounded-lg p-2.5 border border-primary/30 shadow-[0_0_20px_rgba(34,197,94,0.3)]">
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <Activity className="h-3 w-3 text-primary" />
@@ -104,54 +104,56 @@ export const TrendingPoolCard = ({ pool }: TrendingPoolCardProps) => {
               </div>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-4 gap-1.5">
-              <div className="bg-background/50 rounded-lg p-2 border border-primary/20">
-                <Target className="h-3 w-3 text-primary mb-1" />
-                <p className="text-[9px] text-muted-foreground mb-0.5">Momentum</p>
-                <p className="text-sm font-bold text-primary-glow">+32%</p>
+            {/* Center Column: Stats Grid + Odds */}
+            <div className="space-y-2">
+              <div className="grid grid-cols-4 gap-1.5">
+                <div className="bg-background/50 rounded-lg p-2 border border-primary/20">
+                  <Target className="h-3 w-3 text-primary mb-1" />
+                  <p className="text-[9px] text-muted-foreground mb-0.5">Momentum</p>
+                  <p className="text-sm font-bold text-primary-glow">+32%</p>
+                </div>
+                <div className="bg-background/50 rounded-lg p-2 border border-accent-purple/20">
+                  <Zap className="h-3 w-3 text-accent-purple mb-1" />
+                  <p className="text-[9px] text-muted-foreground mb-0.5">24h Vol</p>
+                  <p className="text-sm font-bold text-accent-purple">${(pool.totalStaked * 4.2).toFixed(0)}K</p>
+                </div>
+                <div className="bg-background/50 rounded-lg p-2 border border-accent-pink/20">
+                  <TrendingUp className="h-3 w-3 text-accent-pink mb-1" />
+                  <p className="text-[9px] text-muted-foreground mb-0.5">Win Rate</p>
+                  <p className="text-sm font-bold text-accent-pink">72%</p>
+                </div>
+                <div className="bg-background/50 rounded-lg p-2 border border-primary/20">
+                  <Award className="h-3 w-3 text-primary mb-1" />
+                  <p className="text-[9px] text-muted-foreground mb-0.5">Avg Win</p>
+                  <p className="text-sm font-bold text-primary-glow">$2.8K</p>
+                </div>
               </div>
-              <div className="bg-background/50 rounded-lg p-2 border border-accent-purple/20">
-                <Zap className="h-3 w-3 text-accent-purple mb-1" />
-                <p className="text-[9px] text-muted-foreground mb-0.5">24h Vol</p>
-                <p className="text-sm font-bold text-accent-purple">${(pool.totalStaked * 4.2).toFixed(0)}K</p>
-              </div>
-              <div className="bg-background/50 rounded-lg p-2 border border-accent-pink/20">
-                <TrendingUp className="h-3 w-3 text-accent-pink mb-1" />
-                <p className="text-[9px] text-muted-foreground mb-0.5">Win Rate</p>
-                <p className="text-sm font-bold text-accent-pink">72%</p>
-              </div>
-              <div className="bg-background/50 rounded-lg p-2 border border-primary/20">
-                <Award className="h-3 w-3 text-primary mb-1" />
-                <p className="text-[9px] text-muted-foreground mb-0.5">Avg Win</p>
-                <p className="text-sm font-bold text-primary-glow">$2.8K</p>
+              
+              <div className="bg-background/70 rounded-lg p-2.5 border border-primary/30 shadow-[0_0_20px_rgba(34,197,94,0.3)]">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-[10px] text-muted-foreground mb-1">Live Odds</p>
+                    <p className="text-lg font-bold text-primary-glow">{pool.liveOdds}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] text-muted-foreground mb-1">Min Entry</p>
+                    <p className="text-lg font-bold text-foreground">$50</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Current Odds & Entry */}
-            <div className="bg-background/70 rounded-lg p-2.5 border border-primary/30 shadow-[0_0_20px_rgba(34,197,94,0.3)]">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <p className="text-[10px] text-muted-foreground mb-1">Live Odds</p>
-                  <p className="text-lg font-bold text-primary-glow">{pool.liveOdds}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[10px] text-muted-foreground mb-1">Min Entry</p>
-                  <p className="text-lg font-bold text-foreground">$50</p>
-                </div>
-              </div>
+            {/* Right Column: Join Button */}
+            <div className="space-y-2">
+              <Button 
+                onClick={(e) => e.stopPropagation()}
+                className="w-full shadow-[0_0_30px_rgba(34,197,94,0.5),0_0_60px_rgba(34,197,94,0.3)] hover:shadow-[0_0_40px_rgba(34,197,94,0.7),0_0_80px_rgba(34,197,94,0.4)] transition-all md:h-full md:min-h-[120px] md:text-base" 
+                size="sm"
+              >
+                Join Pool Now
+              </Button>
+              <p className="text-center text-[10px] text-muted-foreground">Click card to see prediction trend</p>
             </div>
-
-            {/* Join Button */}
-            <Button 
-              onClick={(e) => e.stopPropagation()}
-              className="w-full shadow-[0_0_30px_rgba(34,197,94,0.5),0_0_60px_rgba(34,197,94,0.3)] hover:shadow-[0_0_40px_rgba(34,197,94,0.7),0_0_80px_rgba(34,197,94,0.4)] transition-all" 
-              size="sm"
-            >
-              Join Pool Now
-            </Button>
-            
-            <p className="text-center text-[10px] text-muted-foreground">Click card to see prediction trend</p>
           </CardContent>
         </Card>
 
@@ -165,7 +167,7 @@ export const TrendingPoolCard = ({ pool }: TrendingPoolCardProps) => {
           before:absolute before:inset-0 before:rounded-lg before:p-[2px] before:bg-gradient-to-br before:from-primary/60 before:via-accent-purple/40 before:to-transparent before:-z-10
           ${!isFlipped ? 'invisible' : 'visible'}`}
         >
-          <CardHeader className="pb-2 pt-4 px-4">
+          <CardHeader className="pb-3 pt-4 px-4 md:pb-2">
             <div className="flex items-center justify-between mb-2">
               <Badge className="bg-primary/20 text-primary border-primary/40 animate-pulse shadow-[0_0_20px_rgba(34,197,94,0.7)] text-[10px] px-2 py-0.5">
                 <TrendingUp className="h-2.5 w-2.5 mr-1" />
@@ -176,11 +178,11 @@ export const TrendingPoolCard = ({ pool }: TrendingPoolCardProps) => {
             <CardTitle className="text-base leading-tight">{pool.title}</CardTitle>
             <p className="text-xs text-muted-foreground">{pool.sport}</p>
           </CardHeader>
-          <CardContent className="space-y-2.5 pt-0 px-4 pb-4">
-            {/* Prediction Chart */}
+          <CardContent className="space-y-3 pt-0 px-4 pb-4 md:space-y-0 md:grid md:grid-cols-[2fr_1fr_1fr] md:gap-4 md:items-center">
+            {/* Left Column: Prediction Chart */}
             <div className="bg-background/70 rounded-lg p-2.5 border border-primary/30 shadow-[0_0_20px_rgba(34,197,94,0.3)]">
               <p className="text-[10px] text-muted-foreground mb-2">30-Minute Trend</p>
-              <ChartContainer config={chartConfig} className="h-[120px] w-full">
+              <ChartContainer config={chartConfig} className="h-[120px] w-full md:h-[160px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={predictionData}>
                     <XAxis 
@@ -211,8 +213,8 @@ export const TrendingPoolCard = ({ pool }: TrendingPoolCardProps) => {
               </ChartContainer>
             </div>
 
-            {/* Additional Stats */}
-            <div className="grid grid-cols-4 gap-1.5">
+            {/* Center Column: Additional Stats */}
+            <div className="grid grid-cols-4 gap-1.5 md:grid-cols-2">
               <div className="bg-background/50 rounded-lg p-2 border border-primary/20">
                 <Users className="h-3 w-3 text-primary mb-1" />
                 <p className="text-[9px] text-muted-foreground mb-0.5">Growth</p>
@@ -235,9 +237,9 @@ export const TrendingPoolCard = ({ pool }: TrendingPoolCardProps) => {
               </div>
             </div>
 
-            {/* Live Indicator & Join Button */}
+            {/* Right Column: Live Indicator & Join Button */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs px-1">
+              <div className="flex items-center justify-between text-xs px-1 md:flex-col md:items-start md:gap-2">
                 <span className="flex items-center gap-1.5">
                   <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_12px_rgba(34,197,94,0.9)]"></div>
                   <span className="text-muted-foreground font-medium text-[10px]">Live Updates</span>
@@ -250,7 +252,7 @@ export const TrendingPoolCard = ({ pool }: TrendingPoolCardProps) => {
 
               <Button 
                 onClick={(e) => e.stopPropagation()}
-                className="w-full shadow-[0_0_30px_rgba(34,197,94,0.5),0_0_60px_rgba(34,197,94,0.3)] hover:shadow-[0_0_40px_rgba(34,197,94,0.7),0_0_80px_rgba(34,197,94,0.4)] transition-all" 
+                className="w-full shadow-[0_0_30px_rgba(34,197,94,0.5),0_0_60px_rgba(34,197,94,0.3)] hover:shadow-[0_0_40px_rgba(34,197,94,0.7),0_0_80px_rgba(34,197,94,0.4)] transition-all md:h-full md:min-h-[100px] md:text-base" 
                 size="sm"
               >
                 Join Pool Now

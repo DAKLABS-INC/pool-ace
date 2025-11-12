@@ -299,10 +299,8 @@ const Pools = () => {
           <p className="text-muted-foreground">Join existing pools or create your own</p>
         </div>
 
-        {/* Analytics Dashboard and Trending Pools */}
-        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 mb-8">
-          {/* Metrics Dashboard - 2x2 Grid */}
-          <div className="grid grid-cols-2 gap-3">
+        {/* Analytics Dashboard */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
               <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in">
               <CardContent className="pt-5 pb-4 px-4">
                 <div className="flex items-center justify-between mb-3">
@@ -358,25 +356,25 @@ const Pools = () => {
                 <p className="text-[10px] text-primary mt-1">Growing steadily</p>
                 </CardContent>
             </Card>
-          </div>
+        </div>
 
-          {/* Trending Pools Section */}
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="h-5 w-5 text-primary animate-pulse" />
-              <h2 className="text-2xl font-bold">Trending Pools</h2>
-            </div>
-            <Carousel 
-              opts={{ align: "start", loop: true }} 
-              plugins={[
-                Autoplay({
-                  delay: 15000,
-                }),
-              ]}
-              className="w-full flex-1"
-            >
-              <CarouselContent className="h-[340px]">
-                <CarouselItem>
+        {/* Trending Pools Section */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp className="h-5 w-5 text-primary animate-pulse" />
+            <h2 className="text-2xl font-bold">Trending Pools</h2>
+          </div>
+          <Carousel 
+            opts={{ align: "start", loop: true }} 
+            plugins={[
+              Autoplay({
+                delay: 15000,
+              }),
+            ]}
+            className="w-full"
+          >
+            <CarouselContent>
+                <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                   <TrendingPoolCard pool={{
                     id: 1,
                     title: "Lakers vs Warriors - Final Quarter",
@@ -388,7 +386,7 @@ const Pools = () => {
                     liveOdds: "Lakers -3.5"
                   }} />
                 </CarouselItem>
-                <CarouselItem>
+                <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                   <TrendingPoolCard pool={{
                     id: 2,
                     title: "Man City vs Arsenal - 2nd Half",
@@ -400,7 +398,7 @@ const Pools = () => {
                     liveOdds: "Draw 2.8"
                   }} />
                 </CarouselItem>
-                <CarouselItem>
+                <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                   <TrendingPoolCard pool={{
                     id: 3,
                     title: "Real Madrid vs Barcelona - El Clasico",
@@ -412,11 +410,10 @@ const Pools = () => {
                     liveOdds: "BTTS 1.65"
                   }} />
                 </CarouselItem>
-              </CarouselContent>
-              <CarouselPrevious className="-left-4" />
-              <CarouselNext className="-right-4" />
-            </Carousel>
-          </div>
+            </CarouselContent>
+            <CarouselPrevious className="-left-4" />
+            <CarouselNext className="-right-4" />
+          </Carousel>
         </div>
 
         {/* Featured Competitions Carousel - Full Width */}
