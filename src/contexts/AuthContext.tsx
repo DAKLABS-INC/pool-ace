@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { useUser, useClerk } from '@clerk/clerk-react';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useUser, useClerk } from "@clerk/clerk-react";
 
 interface User {
   id: string;
@@ -26,12 +26,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { user: clerkUser, isLoaded } = useUser();
   const { signOut, openSignIn, openSignUp } = useClerk();
   const [user, setUser] = useState<User | null>(null);
@@ -42,28 +44,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Get or create wallet data for user
       const walletKey = `wallet_${clerkUser.id}`;
       let walletData = localStorage.getItem(walletKey);
-      
+
       if (!walletData) {
         // Create new wallet for user
+        // Generate a random Solana-like address (44 base58 chars)
+        const base58Chars =
+          "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+        const randomBase58 = (length: number) =>
+          Array.from(
+            { length },
+            () => base58Chars[Math.floor(Math.random() * base58Chars.length)]
+          ).join("");
         const newWallet = {
-          walletAddress: `0x${Math.random().toString(16).substr(2, 40)}`,
+          walletAddress: randomBase58(44),
           walletBalance: Math.floor(Math.random() * 10000) + 1000,
-          dakTokens: Math.floor(Math.random() * 500) + 100
+          dakTokens: Math.floor(Math.random() * 500) + 100,
         };
         localStorage.setItem(walletKey, JSON.stringify(newWallet));
         walletData = JSON.stringify(newWallet);
       }
-      
+
       const parsedWallet = JSON.parse(walletData);
       const { walletAddress, walletBalance, dakTokens = 0 } = parsedWallet;
-      
+
       setUser({
         id: clerkUser.id,
-        email: clerkUser.primaryEmailAddress?.emailAddress || '',
-        name: clerkUser.fullName || clerkUser.firstName || 'User',
+        email: clerkUser.primaryEmailAddress?.emailAddress || "",
+        name: clerkUser.fullName || clerkUser.firstName || "User",
         walletAddress,
         walletBalance,
-        dakTokens
+        dakTokens,
       });
     } else if (isLoaded && !clerkUser) {
       setUser(null);
@@ -76,7 +86,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return true;
   };
 
-  const signup = async (email: string, password: string, name: string): Promise<boolean> => {
+  const signup = async (
+    email: string,
+    password: string,
+    name: string
+  ): Promise<boolean> => {
     // Clerk handles authentication, just open the sign-up modal
     openSignUp();
     return true;
@@ -93,37 +107,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateWallet = (amount: number) => {
     if (!user) return;
-    
+
     const updatedUser = { ...user, walletBalance: user.walletBalance + amount };
     setUser(updatedUser);
-    
+
     // Update wallet in localStorage
     const walletKey = `wallet_${user.id}`;
-    localStorage.setItem(walletKey, JSON.stringify({
-      walletAddress: updatedUser.walletAddress,
-      walletBalance: updatedUser.walletBalance,
-      dakTokens: updatedUser.dakTokens
-    }));
+    localStorage.setItem(
+      walletKey,
+      JSON.stringify({
+        walletAddress: updatedUser.walletAddress,
+        walletBalance: updatedUser.walletBalance,
+        dakTokens: updatedUser.dakTokens,
+      })
+    );
   };
 
   const refreshWallet = () => {
     if (!user) return;
-    
+
     // Simulate refreshing wallet balance - in real app this would fetch from API
     const randomChange = Math.floor(Math.random() * 200) - 100;
     const newBalance = Math.max(0, user.walletBalance + randomChange);
-    
+
     const updatedUser = { ...user, walletBalance: newBalance };
     setUser(updatedUser);
-    
+
     // Update wallet in localStorage
     const walletKey = `wallet_${user.id}`;
-    localStorage.setItem(walletKey, JSON.stringify({
-      walletAddress: updatedUser.walletAddress,
-      walletBalance: newBalance,
-      dakTokens: updatedUser.dakTokens
-    }));
-    
+    localStorage.setItem(
+      walletKey,
+      JSON.stringify({
+        walletAddress: updatedUser.walletAddress,
+        walletBalance: newBalance,
+        dakTokens: updatedUser.dakTokens,
+      })
+    );
+
     toast({
       title: "Wallet refreshed",
       description: "Wallet balance updated successfully",
@@ -131,15 +151,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      login,
-      signup,
-      logout,
-      updateWallet,
-      refreshWallet,
-      isLoading: !isLoaded
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        signup,
+        logout,
+        updateWallet,
+        refreshWallet,
+        isLoading: !isLoaded,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

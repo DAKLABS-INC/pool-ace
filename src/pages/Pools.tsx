@@ -1,12 +1,34 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Layout from "@/components/Layout/Layout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Users, Calendar, DollarSign, Search, TrendingUp, Trophy, Target, Flame, Radio } from "lucide-react";
+import {
+  Users,
+  Calendar,
+  DollarSign,
+  Search,
+  TrendingUp,
+  Trophy,
+  Target,
+  Flame,
+  Radio,
+} from "lucide-react";
 import { Link } from "react-router-dom";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { CreatePoolModal } from "@/components/Pool/CreatePoolModal";
 import { TrendingPoolCard } from "@/components/Pool/TrendingPoolCard";
 import Autoplay from "embla-carousel-autoplay";
@@ -181,33 +203,41 @@ const Pools = () => {
   });
 
   // Get unique sports for filters
-  const availableSports = ["all", ...Array.from(new Set(allMockPools.map(pool => pool.sport)))];
+  const availableSports = [
+    "all",
+    ...Array.from(new Set(allMockPools.map((pool) => pool.sport))),
+  ];
 
   // Filter pools based on search query, sport, and advanced filters
-  const filteredPools = allMockPools.filter(pool => {
-    const matchesSearch = pool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  const filteredPools = allMockPools.filter((pool) => {
+    const matchesSearch =
+      pool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pool.sport.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pool.league.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesSport = selectedSport === "all" || pool.sport === selectedSport;
-    
+
+    const matchesSport =
+      selectedSport === "all" || pool.sport === selectedSport;
+
     // Advanced filters
-    const matchesParticipants = pool.participants >= filters.minParticipants && 
-                                pool.participants <= filters.maxParticipants;
-    
-    const matchesWinPercentage = pool.winSplit >= filters.minWinPercentage && 
-                                 pool.winSplit <= filters.maxWinPercentage;
-    
-    const matchesDeposit = pool.minDeposit >= filters.minDeposit && 
-                           pool.minDeposit <= filters.maxDeposit;
-    
+    const matchesParticipants =
+      pool.participants >= filters.minParticipants &&
+      pool.participants <= filters.maxParticipants;
+
+    const matchesWinPercentage =
+      pool.winSplit >= filters.minWinPercentage &&
+      pool.winSplit <= filters.maxWinPercentage;
+
+    const matchesDeposit =
+      pool.minDeposit >= filters.minDeposit &&
+      pool.minDeposit <= filters.maxDeposit;
+
     // Date filter logic
     let matchesDate = true;
     if (filters.dateFilter !== "all") {
       const poolDate = new Date(pool.matchDate);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       switch (filters.dateFilter) {
         case "today":
           matchesDate = poolDate.toDateString() === today.toDateString();
@@ -229,9 +259,15 @@ const Pools = () => {
           break;
       }
     }
-    
-    return matchesSearch && matchesSport && matchesParticipants && 
-           matchesWinPercentage && matchesDeposit && matchesDate;
+
+    return (
+      matchesSearch &&
+      matchesSport &&
+      matchesParticipants &&
+      matchesWinPercentage &&
+      matchesDeposit &&
+      matchesDate
+    );
   });
 
   // Load more pools
@@ -239,10 +275,10 @@ const Pools = () => {
     const startIndex = (page - 1) * POOLS_PER_PAGE;
     const endIndex = startIndex + POOLS_PER_PAGE;
     const newPools = filteredPools.slice(startIndex, endIndex);
-    
+
     if (newPools.length > 0) {
-      setDisplayedPools(prev => [...prev, ...newPools]);
-      setPage(prev => prev + 1);
+      setDisplayedPools((prev) => [...prev, ...newPools]);
+      setPage((prev) => prev + 1);
       setHasMore(endIndex < filteredPools.length);
     } else {
       setHasMore(false);
@@ -266,7 +302,7 @@ const Pools = () => {
   // Intersection observer for infinite scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries => {
+      (entries) => {
         if (entries[0].isIntersecting && hasMore) {
           loadMorePools();
         }
@@ -287,8 +323,14 @@ const Pools = () => {
   }, [hasMore, loadMorePools]);
 
   // Calculate metrics
-  const totalLocked = allMockPools.reduce((sum, pool) => sum + (pool.minDeposit * pool.participants), 0);
-  const totalParticipants = allMockPools.reduce((sum, pool) => sum + pool.participants, 0);
+  const totalLocked = allMockPools.reduce(
+    (sum, pool) => sum + pool.minDeposit * pool.participants,
+    0
+  );
+  const totalParticipants = allMockPools.reduce(
+    (sum, pool) => sum + pool.participants,
+    0
+  );
   const avgPoolSize = (totalLocked / allMockPools.length).toFixed(0);
 
   return (
@@ -296,66 +338,93 @@ const Pools = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Available Pools</h1>
-          <p className="text-muted-foreground">Join existing pools or create your own</p>
+          <p className="text-muted-foreground">
+            Join existing pools or create your own
+          </p>
         </div>
 
         {/* Analytics Dashboard */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in">
-              <CardContent className="pt-5 pb-4 px-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                    <DollarSign className="h-5 w-5 text-primary-glow" />
-                  </div>
-                  <TrendingUp className="h-3 w-3 text-primary" />
+          <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in">
+            <CardContent className="pt-5 pb-4 px-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                  <DollarSign className="h-5 w-5 text-primary-glow" />
                 </div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Total Locked</p>
-                <p className="text-2xl font-bold text-primary-glow">${totalLocked.toLocaleString()}</p>
-                <p className="text-[10px] text-primary mt-1">+12.5% this week</p>
-                </CardContent>
-              </Card>
+                <TrendingUp className="h-3 w-3 text-primary" />
+              </div>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                Total Locked
+              </p>
+              <p className="text-2xl font-bold text-primary-glow">
+                ${totalLocked.toLocaleString()}
+              </p>
+              <p className="text-[10px] text-primary mt-1">+12.5% this week</p>
+            </CardContent>
+          </Card>
 
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <CardContent className="pt-5 pb-4 px-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                    <Target className="h-5 w-5 text-primary-glow" />
-                  </div>
-                  <TrendingUp className="h-3 w-3 text-primary" />
+          <Card
+            className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in"
+            style={{ animationDelay: "0.1s" }}
+          >
+            <CardContent className="pt-5 pb-4 px-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                  <Target className="h-5 w-5 text-primary-glow" />
                 </div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Total Pools</p>
-                <p className="text-2xl font-bold text-primary-glow">{allMockPools.length}</p>
-                <p className="text-[10px] text-primary mt-1">+3 new today</p>
-                </CardContent>
-              </Card>
+                <TrendingUp className="h-3 w-3 text-primary" />
+              </div>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                Total Pools
+              </p>
+              <p className="text-2xl font-bold text-primary-glow">
+                {allMockPools.length}
+              </p>
+              <p className="text-[10px] text-primary mt-1">+3 new today</p>
+            </CardContent>
+          </Card>
 
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <CardContent className="pt-5 pb-4 px-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                    <Users className="h-5 w-5 text-primary-glow" />
-                  </div>
-                  <TrendingUp className="h-3 w-3 text-primary" />
+          <Card
+            className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in"
+            style={{ animationDelay: "0.2s" }}
+          >
+            <CardContent className="pt-5 pb-4 px-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                  <Users className="h-5 w-5 text-primary-glow" />
                 </div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Active Users</p>
-                <p className="text-2xl font-bold text-primary-glow">{totalParticipants}</p>
-                <p className="text-[10px] text-primary mt-1">+8.2% this month</p>
-                </CardContent>
-              </Card>
+                <TrendingUp className="h-3 w-3 text-primary" />
+              </div>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                Active Users
+              </p>
+              <p className="text-2xl font-bold text-primary-glow">
+                {totalParticipants}
+              </p>
+              <p className="text-[10px] text-primary mt-1">+8.2% this month</p>
+            </CardContent>
+          </Card>
 
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-              <CardContent className="pt-5 pb-4 px-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                    <Trophy className="h-5 w-5 text-primary-glow" />
-                  </div>
-                  <TrendingUp className="h-3 w-3 text-primary" />
+          <Card
+            className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in"
+            style={{ animationDelay: "0.3s" }}
+          >
+            <CardContent className="pt-5 pb-4 px-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+                  <Trophy className="h-5 w-5 text-primary-glow" />
                 </div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Avg Pool Size</p>
-                <p className="text-2xl font-bold text-primary-glow">${avgPoolSize}</p>
-                <p className="text-[10px] text-primary mt-1">Growing steadily</p>
-                </CardContent>
-            </Card>
+                <TrendingUp className="h-3 w-3 text-primary" />
+              </div>
+              <p className="text-xs font-medium text-muted-foreground mb-1">
+                Avg Pool Size
+              </p>
+              <p className="text-2xl font-bold text-primary-glow">
+                ${avgPoolSize}
+              </p>
+              <p className="text-[10px] text-primary mt-1">Growing steadily</p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Trending Pools Section */}
@@ -364,8 +433,8 @@ const Pools = () => {
             <TrendingUp className="h-5 w-5 text-primary animate-pulse" />
             <h2 className="text-2xl font-bold">Trending Pools</h2>
           </div>
-          <Carousel 
-            opts={{ align: "start", loop: true }} 
+          <Carousel
+            opts={{ align: "start", loop: true }}
             plugins={[
               Autoplay({
                 delay: 15000,
@@ -374,8 +443,9 @@ const Pools = () => {
             className="w-full"
           >
             <CarouselContent>
-                <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                  <TrendingPoolCard pool={{
+              <CarouselItem className="md:basis-1/2 lg:basis-1/2">
+                <TrendingPoolCard
+                  pool={{
                     id: 1,
                     title: "Lakers vs Warriors - Final Quarter",
                     sport: "NBA",
@@ -383,11 +453,13 @@ const Pools = () => {
                     participants: 45,
                     totalStaked: 3250,
                     timeRemaining: "8:23",
-                    liveOdds: "Lakers -3.5"
-                  }} />
-                </CarouselItem>
-                <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                  <TrendingPoolCard pool={{
+                    liveOdds: "Lakers -3.5",
+                  }}
+                />
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/2 lg:basis-1/2">
+                <TrendingPoolCard
+                  pool={{
                     id: 2,
                     title: "Man City vs Arsenal - 2nd Half",
                     sport: "Premier League",
@@ -395,11 +467,13 @@ const Pools = () => {
                     participants: 67,
                     totalStaked: 5100,
                     timeRemaining: "38:45",
-                    liveOdds: "Draw 2.8"
-                  }} />
-                </CarouselItem>
-                <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                  <TrendingPoolCard pool={{
+                    liveOdds: "Draw 2.8",
+                  }}
+                />
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/2 lg:basis-1/2">
+                <TrendingPoolCard
+                  pool={{
                     id: 3,
                     title: "Real Madrid vs Barcelona - El Clasico",
                     sport: "La Liga",
@@ -407,9 +481,10 @@ const Pools = () => {
                     participants: 89,
                     totalStaked: 7800,
                     timeRemaining: "52:15",
-                    liveOdds: "BTTS 1.65"
-                  }} />
-                </CarouselItem>
+                    liveOdds: "BTTS 1.65",
+                  }}
+                />
+              </CarouselItem>
             </CarouselContent>
             <CarouselPrevious className="-left-4" />
             <CarouselNext className="-right-4" />
@@ -428,7 +503,9 @@ const Pools = () => {
                 <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-2">
-                      <Badge className="bg-primary/20 text-primary border-primary/30">Premier League</Badge>
+                      <Badge className="bg-primary/20 text-primary border-primary/30">
+                        Premier League
+                      </Badge>
                       <Trophy className="h-5 w-5 text-primary" />
                     </div>
                     <CardTitle className="text-xl">EPL Championship</CardTitle>
@@ -437,23 +514,45 @@ const Pools = () => {
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
-                        <p className="text-2xl font-bold text-primary-glow">24</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Pools Created
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          24
+                        </p>
                       </div>
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
-                        <p className="text-2xl font-bold text-primary-glow">156</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Active Users
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          156
+                        </p>
                       </div>
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
-                        <p className="text-2xl font-bold text-primary-glow">$12.4K</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Total Staked
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          $12.4K
+                        </p>
                       </div>
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
-                        <p className="text-2xl font-bold text-primary-glow">$80</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Avg Stake
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          $80
+                        </p>
                       </div>
                     </div>
-                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
+                    <Button
+                      className="w-full"
+                      size="sm"
+                      onClick={() => setIsCreatePoolOpen(true)}
+                    >
+                      Create Pool
+                    </Button>
                   </CardContent>
                 </Card>
               </CarouselItem>
@@ -462,7 +561,9 @@ const Pools = () => {
                 <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-2">
-                      <Badge className="bg-primary/20 text-primary border-primary/30">NBA</Badge>
+                      <Badge className="bg-primary/20 text-primary border-primary/30">
+                        NBA
+                      </Badge>
                       <Trophy className="h-5 w-5 text-primary" />
                     </div>
                     <CardTitle className="text-xl">NBA Playoffs</CardTitle>
@@ -471,23 +572,45 @@ const Pools = () => {
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
-                        <p className="text-2xl font-bold text-primary-glow">18</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Pools Created
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          18
+                        </p>
                       </div>
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
-                        <p className="text-2xl font-bold text-primary-glow">92</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Active Users
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          92
+                        </p>
                       </div>
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
-                        <p className="text-2xl font-bold text-primary-glow">$8.2K</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Total Staked
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          $8.2K
+                        </p>
                       </div>
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
-                        <p className="text-2xl font-bold text-primary-glow">$89</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Avg Stake
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          $89
+                        </p>
                       </div>
                     </div>
-                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
+                    <Button
+                      className="w-full"
+                      size="sm"
+                      onClick={() => setIsCreatePoolOpen(true)}
+                    >
+                      Create Pool
+                    </Button>
                   </CardContent>
                 </Card>
               </CarouselItem>
@@ -496,7 +619,9 @@ const Pools = () => {
                 <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-2">
-                      <Badge className="bg-primary/20 text-primary border-primary/30">Champions League</Badge>
+                      <Badge className="bg-primary/20 text-primary border-primary/30">
+                        Champions League
+                      </Badge>
                       <Trophy className="h-5 w-5 text-primary" />
                     </div>
                     <CardTitle className="text-xl">UCL Knockout</CardTitle>
@@ -505,23 +630,45 @@ const Pools = () => {
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
-                        <p className="text-2xl font-bold text-primary-glow">31</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Pools Created
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          31
+                        </p>
                       </div>
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
-                        <p className="text-2xl font-bold text-primary-glow">203</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Active Users
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          203
+                        </p>
                       </div>
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
-                        <p className="text-2xl font-bold text-primary-glow">$18.7K</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Total Staked
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          $18.7K
+                        </p>
                       </div>
                       <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
-                        <p className="text-2xl font-bold text-primary-glow">$92</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Avg Stake
+                        </p>
+                        <p className="text-2xl font-bold text-primary-glow">
+                          $92
+                        </p>
                       </div>
                     </div>
-                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
+                    <Button
+                      className="w-full"
+                      size="sm"
+                      onClick={() => setIsCreatePoolOpen(true)}
+                    >
+                      Create Pool
+                    </Button>
                   </CardContent>
                 </Card>
               </CarouselItem>
@@ -543,18 +690,20 @@ const Pools = () => {
               className="pl-10"
             />
           </div>
-          <PoolFilters 
+          <PoolFilters
             filters={filters}
             onFiltersChange={setFilters}
-            onClearFilters={() => setFilters({
-              minParticipants: 0,
-              maxParticipants: 100,
-              minWinPercentage: 0,
-              maxWinPercentage: 100,
-              dateFilter: "all",
-              minDeposit: 0,
-              maxDeposit: 1000,
-            })}
+            onClearFilters={() =>
+              setFilters({
+                minParticipants: 0,
+                maxParticipants: 100,
+                minWinPercentage: 0,
+                maxWinPercentage: 100,
+                dateFilter: "all",
+                minDeposit: 0,
+                maxDeposit: 1000,
+              })
+            }
           />
         </div>
 
@@ -575,14 +724,22 @@ const Pools = () => {
         <div className="max-h-[800px] overflow-y-auto scrollbar-hide">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pr-2">
             {displayedPools.map((pool) => (
-              <Link key={pool.id} to={`/pools/${pool.id}`} className="block h-full">
+              <Link
+                key={pool.id}
+                to={`/pools/${pool.id}`}
+                className="block h-full"
+              >
                 <Card className="hover:shadow-lg hover:border-primary/50 transition-all duration-300 cursor-pointer group h-full flex flex-col">
                   <CardHeader className="flex-shrink-0">
                     <div className="flex justify-between items-start mb-2">
                       <Badge variant="secondary">{pool.sport}</Badge>
-                      {pool.isPrivate && <Badge variant="outline">Private</Badge>}
+                      {pool.isPrivate && (
+                        <Badge variant="outline">Private</Badge>
+                      )}
                     </div>
-                    <CardTitle className="text-lg group-hover:text-primary transition-colors">{pool.title}</CardTitle>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                      {pool.title}
+                    </CardTitle>
                     <CardDescription>{pool.league}</CardDescription>
                   </CardHeader>
                   <CardContent className="flex-grow flex items-end">
@@ -590,20 +747,24 @@ const Pools = () => {
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center">
                           <Users className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>{pool.participants}/{pool.maxParticipants}</span>
+                          <span>
+                            {pool.participants}/{pool.maxParticipants}
+                          </span>
                         </div>
                         <div className="flex items-center">
                           <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                           <span>{pool.matchDate}</span>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center">
                           <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
                           <span>Min: ${pool.minDeposit}</span>
                         </div>
-                        <span className="text-primary font-medium">{pool.winSplit}% winner</span>
+                        <span className="text-primary font-medium">
+                          {pool.winSplit}% winner
+                        </span>
                       </div>
                     </div>
                   </CardContent>
@@ -633,7 +794,10 @@ const Pools = () => {
         </div>
       </div>
 
-      <CreatePoolModal isOpen={isCreatePoolOpen} onClose={() => setIsCreatePoolOpen(false)} />
+      <CreatePoolModal
+        isOpen={isCreatePoolOpen}
+        onClose={() => setIsCreatePoolOpen(false)}
+      />
     </Layout>
   );
 };
