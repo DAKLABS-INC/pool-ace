@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { AuthModal } from "@/components/Auth/AuthModal";
 import { AccountModal } from "@/components/Auth/AccountModal";
 import { CreatePoolModal } from "@/components/Pool/CreatePoolModal";
 import { useTheme } from "next-themes";
@@ -120,6 +119,7 @@ const Header = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
+                    {/* Mobile-only nav links, after Create Pool */}
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
                         <p className="font-medium">{user.name}</p>
@@ -135,6 +135,43 @@ const Header = () => {
                       <Plus className="mr-2 h-4 w-4" />
                       Create Pool
                     </DropdownMenuItem>
+                    <div className="block md:hidden">
+                      <DropdownMenuItem asChild>
+                        <Link to="/pools">
+                          <svg
+                            className="mr-2 h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                          </svg>
+                          Browse Pools
+                        </Link>
+                      </DropdownMenuItem>
+                      {user && (
+                        <DropdownMenuItem asChild>
+                          <Link to="/my-pools">
+                            <svg
+                              className="mr-2 h-4 w-4"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+                              <circle cx="9" cy="7" r="4" />
+                              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                            My Pools
+                          </Link>
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuSeparator />
+                    </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setAccountModalOpen(true)}>
                       <User className="mr-2 h-4 w-4" />
@@ -173,30 +210,26 @@ const Header = () => {
                 </DropdownMenu>
               </>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center">
                 <Button
-                  variant="ghost"
+                  variant="neon"
                   size="sm"
-                  onClick={() => setAuthModalOpen(true)}
+                  onClick={() => {
+                    if (window.Clerk && window.Clerk.openSignIn) {
+                      window.Clerk.openSignIn();
+                    } else if (window.Clerk && window.Clerk.openSignUp) {
+                      window.Clerk.openSignUp();
+                    }
+                  }}
+                  className="font-bold px-6"
                 >
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Login
-                </Button>
-                <Button size="sm" onClick={() => setAuthModalOpen(true)}>
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Sign Up
+                  Get Started
                 </Button>
               </div>
             )}
           </div>
         </div>
       </header>
-
-      <AuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        onLoginSuccess={handleLoginSuccess}
-      />
 
       <AccountModal
         isOpen={accountModalOpen}

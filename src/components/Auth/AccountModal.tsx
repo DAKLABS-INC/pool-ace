@@ -105,10 +105,10 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span
-                        tabIndex={0}
-                        className="ml-1 cursor-pointer text-muted-foreground"
+                        className="ml-1 cursor-pointer text-muted-foreground flex items-center"
+                        style={{ lineHeight: 0 }}
                       >
-                        <Info className="h-4 w-4" />
+                        <Info className="h-3 w-3" />
                       </span>
                     </TooltipTrigger>
                     <TooltipContent
