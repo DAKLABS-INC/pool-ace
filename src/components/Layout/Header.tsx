@@ -9,19 +9,19 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { User, LogIn, UserPlus, Wallet, LogOut, History, RefreshCw, Moon, Sun, Plus } from "lucide-react";
+import { User, Wallet, LogOut, History, RefreshCw, Moon, Sun, Plus, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from '@/contexts/AuthContext';
-import { AuthModal } from '@/components/Auth/AuthModal';
 import { AccountModal } from '@/components/Auth/AccountModal';
 import { CreatePoolModal } from '@/components/Pool/CreatePoolModal';
 import { useTheme } from "next-themes";
+import { useClerk } from '@clerk/clerk-react';
 import logo from '@/assets/logo.png';
 
 const Header = () => {
   const { user, logout, refreshWallet } = useAuth();
   const { theme, setTheme } = useTheme();
-  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const { openSignIn } = useClerk();
   const [accountModalOpen, setAccountModalOpen] = useState(false);
   const [createPoolModalOpen, setCreatePoolModalOpen] = useState(false);
   const [showAccountModal, setShowAccountModal] = useState(false);
@@ -143,26 +143,15 @@ const Header = () => {
                 </DropdownMenu>
               </>
             ) : (
-              <div className="flex items-center space-x-2">
-                <Button variant="ghost" size="sm" onClick={() => setAuthModalOpen(true)}>
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Login
-                </Button>
-                <Button size="sm" onClick={() => setAuthModalOpen(true)}>
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Sign Up
-                </Button>
-              </div>
+              <Button variant="neon" size="sm" onClick={() => openSignIn()}>
+                <Zap className="h-4 w-4 mr-2" />
+                Get Started
+              </Button>
             )}
           </div>
         </div>
       </header>
 
-      <AuthModal 
-        isOpen={authModalOpen} 
-        onClose={() => setAuthModalOpen(false)}
-        onLoginSuccess={handleLoginSuccess}
-      />
       
       <AccountModal 
         isOpen={accountModalOpen} 
