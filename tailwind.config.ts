@@ -16,8 +16,9 @@ export default {
       fontFamily: {
         'libertinus': ['Libertinus Serif', 'serif'],
         'kode': ['Kode Mono', 'monospace'],
-        'sans': ['Kode Mono', 'monospace'],
+        'sans': ['Inter', 'system-ui', 'sans-serif'],
         'orbitron': ['Orbitron', 'sans-serif'],
+        'mono': ['Kode Mono', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",

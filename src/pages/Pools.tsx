@@ -2,14 +2,10 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Layout from "@/components/Layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Users, Calendar, DollarSign, Search, TrendingUp, Trophy, Target, Flame, Radio } from "lucide-react";
+import { Users, Calendar, DollarSign, Search } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { CreatePoolModal } from "@/components/Pool/CreatePoolModal";
-import { TrendingPoolCard } from "@/components/Pool/TrendingPoolCard";
-import Autoplay from "embla-carousel-autoplay";
 import { PoolFilters, PoolFilterValues } from "@/components/Pool/PoolFilters";
 
 const allMockPools = [
@@ -294,241 +290,9 @@ const Pools = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Available Pools</h1>
-          <p className="text-muted-foreground">Join existing pools or create your own</p>
-        </div>
-
-        {/* Analytics Dashboard */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in">
-              <CardContent className="pt-5 pb-4 px-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                    <DollarSign className="h-5 w-5 text-primary-glow" />
-                  </div>
-                  <TrendingUp className="h-3 w-3 text-primary" />
-                </div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Total Locked</p>
-                <p className="text-2xl font-bold text-primary-glow">${totalLocked.toLocaleString()}</p>
-                <p className="text-[10px] text-primary mt-1">+12.5% this week</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <CardContent className="pt-5 pb-4 px-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                    <Target className="h-5 w-5 text-primary-glow" />
-                  </div>
-                  <TrendingUp className="h-3 w-3 text-primary" />
-                </div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Total Pools</p>
-                <p className="text-2xl font-bold text-primary-glow">{allMockPools.length}</p>
-                <p className="text-[10px] text-primary mt-1">+3 new today</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <CardContent className="pt-5 pb-4 px-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                    <Users className="h-5 w-5 text-primary-glow" />
-                  </div>
-                  <TrendingUp className="h-3 w-3 text-primary" />
-                </div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Active Users</p>
-                <p className="text-2xl font-bold text-primary-glow">{totalParticipants}</p>
-                <p className="text-[10px] text-primary mt-1">+8.2% this month</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-primary/30 bg-card/50 backdrop-blur shadow-[0_0_20px_rgba(34,197,94,0.15)] hover:shadow-[0_0_30px_rgba(34,197,94,0.25)] transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-              <CardContent className="pt-5 pb-4 px-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-                    <Trophy className="h-5 w-5 text-primary-glow" />
-                  </div>
-                  <TrendingUp className="h-3 w-3 text-primary" />
-                </div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Avg Pool Size</p>
-                <p className="text-2xl font-bold text-primary-glow">${avgPoolSize}</p>
-                <p className="text-[10px] text-primary mt-1">Growing steadily</p>
-                </CardContent>
-            </Card>
-        </div>
-
-        {/* Trending Pools Section */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="h-5 w-5 text-primary animate-pulse" />
-            <h2 className="text-2xl font-bold">Trending Pools</h2>
-          </div>
-          <Carousel 
-            opts={{ align: "start", loop: true }} 
-            plugins={[
-              Autoplay({
-                delay: 15000,
-              }),
-            ]}
-            className="w-full"
-          >
-            <CarouselContent>
-                <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                  <TrendingPoolCard pool={{
-                    id: 1,
-                    title: "Lakers vs Warriors - Final Quarter",
-                    sport: "NBA",
-                    currentScore: "98-95",
-                    participants: 45,
-                    totalStaked: 3250,
-                    timeRemaining: "8:23",
-                    liveOdds: "Lakers -3.5"
-                  }} />
-                </CarouselItem>
-                <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                  <TrendingPoolCard pool={{
-                    id: 2,
-                    title: "Man City vs Arsenal - 2nd Half",
-                    sport: "Premier League",
-                    currentScore: "2-1",
-                    participants: 67,
-                    totalStaked: 5100,
-                    timeRemaining: "38:45",
-                    liveOdds: "Draw 2.8"
-                  }} />
-                </CarouselItem>
-                <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                  <TrendingPoolCard pool={{
-                    id: 3,
-                    title: "Real Madrid vs Barcelona - El Clasico",
-                    sport: "La Liga",
-                    currentScore: "1-1",
-                    participants: 89,
-                    totalStaked: 7800,
-                    timeRemaining: "52:15",
-                    liveOdds: "BTTS 1.65"
-                  }} />
-                </CarouselItem>
-            </CarouselContent>
-            <CarouselPrevious className="-left-4" />
-            <CarouselNext className="-right-4" />
-          </Carousel>
-        </div>
-
-        {/* Featured Competitions Carousel - Full Width */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Flame className="h-5 w-5 text-primary" />
-            <h2 className="text-2xl font-bold">Featured Competitions</h2>
-          </div>
-          <Carousel opts={{ align: "start", loop: true }} className="w-full">
-            <CarouselContent>
-              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge className="bg-primary/20 text-primary border-primary/30">Premier League</Badge>
-                      <Trophy className="h-5 w-5 text-primary" />
-                    </div>
-                    <CardTitle className="text-xl">EPL Championship</CardTitle>
-                    <CardDescription>Season-long competition</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
-                        <p className="text-2xl font-bold text-primary-glow">24</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
-                        <p className="text-2xl font-bold text-primary-glow">156</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
-                        <p className="text-2xl font-bold text-primary-glow">$12.4K</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
-                        <p className="text-2xl font-bold text-primary-glow">$80</p>
-                      </div>
-                    </div>
-                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-
-              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge className="bg-primary/20 text-primary border-primary/30">NBA</Badge>
-                      <Trophy className="h-5 w-5 text-primary" />
-                    </div>
-                    <CardTitle className="text-xl">NBA Playoffs</CardTitle>
-                    <CardDescription>Knockout stage betting</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
-                        <p className="text-2xl font-bold text-primary-glow">18</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
-                        <p className="text-2xl font-bold text-primary-glow">92</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
-                        <p className="text-2xl font-bold text-primary-glow">$8.2K</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
-                        <p className="text-2xl font-bold text-primary-glow">$89</p>
-                      </div>
-                    </div>
-                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-
-              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                <Card className="border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge className="bg-primary/20 text-primary border-primary/30">Champions League</Badge>
-                      <Trophy className="h-5 w-5 text-primary" />
-                    </div>
-                    <CardTitle className="text-xl">UCL Knockout</CardTitle>
-                    <CardDescription>European club competition</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Pools Created</p>
-                        <p className="text-2xl font-bold text-primary-glow">31</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Active Users</p>
-                        <p className="text-2xl font-bold text-primary-glow">203</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Total Staked</p>
-                        <p className="text-2xl font-bold text-primary-glow">$18.7K</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">Avg Stake</p>
-                        <p className="text-2xl font-bold text-primary-glow">$92</p>
-                      </div>
-                    </div>
-                    <Button className="w-full" size="sm" onClick={() => setIsCreatePoolOpen(true)}>Create Pool</Button>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-            </CarouselContent>
-            <CarouselPrevious className="-left-4" />
-            <CarouselNext className="-right-4" />
-          </Carousel>
+        <div className="mb-6">
+          <h1 className="text-2xl font-semibold tracking-tight mb-1">Browse Pools</h1>
+          <p className="text-sm text-muted-foreground">Find and join prediction pools across all sports</p>
         </div>
 
         {/* Search Bar and Filters */}
@@ -561,48 +325,49 @@ const Pools = () => {
         {/* Sport Filters */}
         <div className="mb-6 flex flex-wrap gap-2">
           {availableSports.map((sport) => (
-            <Badge
+            <button
               key={sport}
-              variant={selectedSport === sport ? "default" : "outline"}
-              className="cursor-pointer hover:bg-primary/90 transition-colors capitalize"
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors capitalize ${
+                selectedSport === sport
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-secondary text-muted-foreground hover:text-foreground'
+              }`}
               onClick={() => setSelectedSport(sport)}
             >
               {sport}
-            </Badge>
+            </button>
           ))}
         </div>
 
         <div className="max-h-[800px] overflow-y-auto scrollbar-hide">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pr-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-2">
             {displayedPools.map((pool) => (
               <Link key={pool.id} to={`/pools/${pool.id}`} className="block h-full">
-                <Card className="hover:shadow-lg hover:border-primary/50 transition-all duration-300 cursor-pointer group h-full flex flex-col">
-                  <CardHeader className="flex-shrink-0">
-                    <div className="flex justify-between items-start mb-2">
-                      <Badge variant="secondary">{pool.sport}</Badge>
-                      {pool.isPrivate && <Badge variant="outline">Private</Badge>}
+                <Card className="border-border/60 hover:border-primary/40 transition-all duration-200 cursor-pointer group h-full flex flex-col bg-card/80">
+                  <CardHeader className="flex-shrink-0 pb-3">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{pool.sport} · {pool.league}</span>
+                      {pool.isPrivate && <span className="text-[10px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground">Private</span>}
                     </div>
-                    <CardTitle className="text-lg group-hover:text-primary transition-colors">{pool.title}</CardTitle>
-                    <CardDescription>{pool.league}</CardDescription>
+                    <CardTitle className="text-base font-semibold group-hover:text-primary transition-colors leading-snug">{pool.title}</CardTitle>
                   </CardHeader>
-                  <CardContent className="flex-grow flex items-end">
-                    <div className="space-y-3 w-full">
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center">
-                          <Users className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>{pool.participants}/{pool.maxParticipants}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>{pool.matchDate}</span>
-                        </div>
+                  <CardContent className="flex-grow flex items-end pt-0">
+                    <div className="w-full space-y-2">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1.5">
+                          <Users className="h-3.5 w-3.5" />
+                          {pool.participants}/{pool.maxParticipants}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Calendar className="h-3.5 w-3.5" />
+                          {pool.matchDate}
+                        </span>
                       </div>
-                      
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center">
-                          <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>Min: ${pool.minDeposit}</span>
-                        </div>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground flex items-center gap-1.5">
+                          <DollarSign className="h-3.5 w-3.5" />
+                          Min ${pool.minDeposit}
+                        </span>
                         <span className="text-primary font-medium">{pool.winSplit}% winner</span>
                       </div>
                     </div>
