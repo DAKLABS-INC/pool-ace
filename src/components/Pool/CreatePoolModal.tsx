@@ -2,18 +2,14 @@ import React, { useState, useMemo } from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, Calendar, Trophy, MapPin, X, Check } from "lucide-react";
+import { Search, Calendar, Trophy, MapPin, X, Check, Plus, Trash2, BarChart3, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface Match {
@@ -47,18 +43,24 @@ interface CreatePoolModalProps {
   onClose: () => void;
 }
 
+type PoolType = 'pool' | 'market';
+
 export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClose }) => {
+  const [poolType, setPoolType] = useState<PoolType>('pool');
   const [winSplit, setWinSplit] = useState([70]);
   const [isPrivate, setIsPrivate] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
+  // Market-specific state
+  const [marketTitle, setMarketTitle] = useState('');
+  const [alternatives, setAlternatives] = useState<string[]>(['', '']);
+
   const filteredMatches = useMemo(() => {
     if (!searchQuery.trim()) return MOCK_MATCHES.slice(0, 6);
-    
     const query = searchQuery.toLowerCase();
-    return MOCK_MATCHES.filter(match => 
+    return MOCK_MATCHES.filter(match =>
       match.homeTeam.toLowerCase().includes(query) ||
       match.awayTeam.toLowerCase().includes(query) ||
       match.sport.toLowerCase().includes(query) ||
@@ -88,59 +90,121 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
     setSearchQuery('');
   };
 
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Create New Pool</DialogTitle>
-          <DialogDescription>Set up your betting pool for an upcoming match</DialogDescription>
-        </DialogHeader>
+  const addAlternative = () => {
+    setAlternatives([...alternatives, '']);
+  };
 
-        <Card className="border-0 shadow-none">
-          <CardHeader className="px-0 pb-4">
-            <CardTitle>Pool Configuration</CardTitle>
-            <CardDescription>Configure your pool settings and match selection</CardDescription>
-          </CardHeader>
-          <ScrollArea className="h-[calc(90vh-180px)]">
-            <CardContent className="space-y-6 pl-1 pr-4 pb-8">
-              {/* Match Search */}
+  const removeAlternative = (index: number) => {
+    if (alternatives.length <= 2) return;
+    setAlternatives(alternatives.filter((_, i) => i !== index));
+  };
+
+  const updateAlternative = (index: number, value: string) => {
+    const updated = [...alternatives];
+    updated[index] = value;
+    setAlternatives(updated);
+  };
+
+  const isPoolValid = poolType === 'pool' ? !!selectedMatch : (marketTitle.trim() !== '' && alternatives.filter(a => a.trim()).length >= 2);
+
+  const handleReset = () => {
+    setPoolType('pool');
+    setWinSplit([70]);
+    setIsPrivate(false);
+    setSearchQuery('');
+    setSelectedMatch(null);
+    setMarketTitle('');
+    setAlternatives(['', '']);
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) { onClose(); handleReset(); } }}>
+      <DialogContent className="sm:max-w-[600px] p-0 gap-0 overflow-hidden max-h-[88vh]">
+        {/* Header */}
+        <div className="px-6 pt-6 pb-4 border-b bg-muted/30">
+          <h2 className="text-lg font-semibold">Create New</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">Set up a pool or custom market</p>
+        </div>
+
+        <div className="overflow-y-auto scrollbar-hide">
+          <div className="px-6 py-5 space-y-5">
+            {/* Type Selector */}
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => setPoolType('pool')}
+                className={`relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                  poolType === 'pool'
+                    ? 'border-primary bg-primary/5'
+                    : 'border-border hover:border-muted-foreground/30 bg-card'
+                }`}
+              >
+                {poolType === 'pool' && (
+                  <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                    <Check className="h-3 w-3 text-primary-foreground" />
+                  </div>
+                )}
+                <div className={`h-10 w-10 rounded-full flex items-center justify-center ${poolType === 'pool' ? 'bg-primary/20' : 'bg-muted'}`}>
+                  <Users className="h-5 w-5 text-primary" />
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-semibold">Pool</p>
+                  <p className="text-[11px] text-muted-foreground">Bet on a match</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setPoolType('market')}
+                className={`relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                  poolType === 'market'
+                    ? 'border-primary bg-primary/5'
+                    : 'border-border hover:border-muted-foreground/30 bg-card'
+                }`}
+              >
+                {poolType === 'market' && (
+                  <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                    <Check className="h-3 w-3 text-primary-foreground" />
+                  </div>
+                )}
+                <div className={`h-10 w-10 rounded-full flex items-center justify-center ${poolType === 'market' ? 'bg-primary/20' : 'bg-muted'}`}>
+                  <BarChart3 className="h-5 w-5 text-primary" />
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-semibold">Market</p>
+                  <p className="text-[11px] text-muted-foreground">Custom outcomes</p>
+                </div>
+              </button>
+            </div>
+
+            {/* Pool Flow: Match Search */}
+            {poolType === 'pool' && (
               <div className="space-y-2">
-                <Label>Search Match</Label>
-                
+                <Label className="text-sm font-medium">Select Match</Label>
                 {selectedMatch ? (
-                  <div className="relative p-4 rounded-lg border-2 border-primary/50 bg-primary/5">
+                  <div className="relative p-4 rounded-lg border border-primary/30 bg-primary/5">
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="absolute top-2 right-2 h-6 w-6 p-0"
+                      className="absolute top-2 right-2 h-6 w-6 p-0 hover:bg-destructive/10"
                       onClick={handleClearSelection}
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-3.5 w-3.5" />
                     </Button>
-                    <div className="flex items-start gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
-                        <Check className="h-5 w-5 text-primary" />
+                    <div className="flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                        <Check className="h-4 w-4 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-semibold text-foreground">
-                          {selectedMatch.homeTeam} vs {selectedMatch.awayTeam}
-                        </p>
-                        <div className="flex flex-wrap items-center gap-2 mt-1">
-                          <Badge variant="outline" className={getSportColor(selectedMatch.sport)}>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-sm">{selectedMatch.homeTeam} vs {selectedMatch.awayTeam}</p>
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                          <Badge variant="outline" className={`text-[10px] px-1.5 py-0 h-5 ${getSportColor(selectedMatch.sport)}`}>
                             {selectedMatch.sport}
                           </Badge>
-                          <Badge variant="outline" className="bg-muted/50">
-                            <Trophy className="h-3 w-3 mr-1" />
-                            {selectedMatch.league}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center gap-3 mt-2 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1">
+                          <span className="text-[11px] text-muted-foreground flex items-center gap-0.5">
                             <Calendar className="h-3 w-3" />
                             {selectedMatch.date}, {selectedMatch.time}
                           </span>
                           {selectedMatch.venue && (
-                            <span className="flex items-center gap-1">
+                            <span className="text-[11px] text-muted-foreground flex items-center gap-0.5">
                               <MapPin className="h-3 w-3" />
                               {selectedMatch.venue}
                             </span>
@@ -162,10 +226,9 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
                         className="pl-10"
                       />
                     </div>
-                    
                     {isSearchFocused && (
-                      <div className="absolute z-50 w-full mt-1 rounded-lg border border-border bg-popover shadow-lg">
-                        <ScrollArea className="max-h-[280px]">
+                      <div className="absolute z-50 w-full mt-1 rounded-lg border bg-popover shadow-lg">
+                        <ScrollArea className="max-h-[240px]">
                           {filteredMatches.length > 0 ? (
                             <div className="p-1">
                               {filteredMatches.map((match) => (
@@ -174,34 +237,23 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
                                   className="w-full p-3 text-left rounded-md hover:bg-accent transition-colors"
                                   onClick={() => handleSelectMatch(match)}
                                 >
-                                  <div className="flex items-start justify-between gap-2">
-                                    <div className="flex-1 min-w-0">
-                                      <p className="font-medium text-foreground truncate">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <div className="min-w-0">
+                                      <p className="text-sm font-medium truncate">
                                         {match.homeTeam} vs {match.awayTeam}
                                       </p>
-                                      <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-                                        <Badge 
-                                          variant="outline" 
-                                          className={`text-[10px] px-1.5 py-0 h-5 ${getSportColor(match.sport)}`}
-                                        >
+                                      <div className="flex items-center gap-1.5 mt-1">
+                                        <Badge variant="outline" className={`text-[10px] px-1.5 py-0 h-5 ${getSportColor(match.sport)}`}>
                                           {match.sport}
                                         </Badge>
-                                        <Badge 
-                                          variant="outline" 
-                                          className="text-[10px] px-1.5 py-0 h-5 bg-muted/50"
-                                        >
+                                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5 bg-muted/50">
                                           {match.league}
                                         </Badge>
                                       </div>
                                     </div>
-                                    <div className="text-right shrink-0">
-                                      <p className="text-xs text-muted-foreground flex items-center gap-1">
-                                        <Calendar className="h-3 w-3" />
-                                        {match.date}
-                                      </p>
-                                      <p className="text-xs text-muted-foreground mt-0.5">
-                                        {match.time}
-                                      </p>
+                                    <div className="text-right shrink-0 text-[11px] text-muted-foreground">
+                                      <p>{match.date}</p>
+                                      <p>{match.time}</p>
                                     </div>
                                   </div>
                                 </button>
@@ -218,65 +270,102 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
                   </div>
                 )}
               </div>
+            )}
 
-              <div className="space-y-2">
-                <Label htmlFor="min-deposit">Minimum Deposit ($)</Label>
-                <Input
-                  id="min-deposit"
-                  type="number"
-                  placeholder="50"
-                  min="1"
-                />
-              </div>
-
-              <div className="space-y-4">
-                <Label>Win/Loss Split Ratio</Label>
-                <div className="px-3">
-                  <Slider
-                    value={winSplit}
-                    onValueChange={setWinSplit}
-                    max={90}
-                    min={60}
-                    step={5}
-                    className="w-full"
-                  />
-                </div>
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Winners get {winSplit[0]}%</span>
-                  <span>Losers get {100 - winSplit[0]}%</span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="private-pool">Private Pool</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Make this pool invite-only
-                  </p>
-                </div>
-                <Switch
-                  id="private-pool"
-                  checked={isPrivate}
-                  onCheckedChange={setIsPrivate}
-                />
-              </div>
-
-              {isPrivate && (
+            {/* Market Flow: Title + Alternatives */}
+            {poolType === 'market' && (
+              <>
                 <div className="space-y-2">
-                  <Label htmlFor="invite-code">Invite Code (Optional)</Label>
+                  <Label className="text-sm font-medium">Market Title</Label>
                   <Input
-                    id="invite-code"
-                    placeholder="Enter custom invite code"
+                    placeholder="e.g. Who will win the Ballon d'Or 2025?"
+                    value={marketTitle}
+                    onChange={(e) => setMarketTitle(e.target.value)}
                   />
                 </div>
-              )}
 
-              <Button className="w-full" size="lg" disabled={!selectedMatch}>
-                Create Pool
-              </Button>
-            </CardContent>
-          </ScrollArea>
-        </Card>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium">Alternatives</Label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 text-xs gap-1 text-primary hover:text-primary"
+                      onClick={addAlternative}
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      Add Option
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {alternatives.map((alt, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <div className="h-6 w-6 rounded-full border bg-muted flex items-center justify-center shrink-0">
+                          <span className="text-[10px] font-semibold text-muted-foreground">{index + 1}</span>
+                        </div>
+                        <Input
+                          placeholder={`Option ${index + 1}`}
+                          value={alt}
+                          onChange={(e) => updateAlternative(index, e.target.value)}
+                          className="flex-1"
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive shrink-0"
+                          onClick={() => removeAlternative(index)}
+                          disabled={alternatives.length <= 2}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">Minimum 2 alternatives required</p>
+                </div>
+              </>
+            )}
+
+            {/* Shared Settings */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Minimum Deposit ($)</Label>
+              <Input type="number" placeholder="50" min="1" />
+            </div>
+
+            <div className="space-y-3">
+              <Label className="text-sm font-medium">Win/Loss Split</Label>
+              <div className="px-1">
+                <Slider value={winSplit} onValueChange={setWinSplit} max={90} min={60} step={5} />
+              </div>
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>Winners: {winSplit[0]}%</span>
+                <span>Losers: {100 - winSplit[0]}%</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg border p-3">
+              <div>
+                <p className="text-sm font-medium">Private {poolType === 'pool' ? 'Pool' : 'Market'}</p>
+                <p className="text-[11px] text-muted-foreground">Invite-only access</p>
+              </div>
+              <Switch checked={isPrivate} onCheckedChange={setIsPrivate} />
+            </div>
+
+            {isPrivate && (
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Invite Code (Optional)</Label>
+                <Input placeholder="Custom invite code" />
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="px-6 py-4 border-t bg-muted/20">
+            <Button className="w-full" size="lg" disabled={!isPoolValid}>
+              Create {poolType === 'pool' ? 'Pool' : 'Market'}
+            </Button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
