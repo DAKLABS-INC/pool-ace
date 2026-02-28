@@ -2,10 +2,10 @@ import Layout from "@/components/Layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Calendar, DollarSign, Trophy, Clock } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Users, Calendar, DollarSign, Trophy, Clock, Search } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { PoolResultsModal } from "@/components/Pool/PoolResultsModal";
 import { ClaimModal } from "@/components/Pool/ClaimModal";
 import { PoolDetailsModal } from "@/components/Pool/PoolDetailsModal";
@@ -50,8 +50,8 @@ const mockMyPools = [
 ];
 
 const MyPools = () => {
-  const activePools = mockMyPools.filter(pool => pool.status === 'active');
-  const completedPools = mockMyPools.filter(pool => pool.status === 'completed');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'active' | 'completed'>('active');
   const [selectedPool, setSelectedPool] = useState<any>(null);
   const [resultsModalOpen, setResultsModalOpen] = useState(false);
   const [claimModalOpen, setClaimModalOpen] = useState(false);
@@ -59,6 +59,16 @@ const MyPools = () => {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
   const [selectedWithdrawPool, setSelectedWithdrawPool] = useState<any>(null);
+
+  const filteredPools = useMemo(() => {
+    return mockMyPools.filter(pool => {
+      const matchesStatus = pool.status === statusFilter;
+      const matchesSearch = searchQuery.trim() === '' || 
+        pool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        pool.sport.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesStatus && matchesSearch;
+    });
+  }, [searchQuery, statusFilter]);
 
   const handleViewResults = (pool: any) => {
     setSelectedPool(pool);
@@ -94,20 +104,49 @@ const MyPools = () => {
           <p className="text-muted-foreground">Manage your active pools and view results</p>
         </div>
 
-        <Tabs defaultValue="active" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
-            <TabsTrigger value="active">Active Pools</TabsTrigger>
-            <TabsTrigger value="completed">Completed Pools</TabsTrigger>
-          </TabsList>
+        {/* Search & Filters */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search pools..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant={statusFilter === 'active' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setStatusFilter('active')}
+              className="gap-1.5"
+            >
+              <Clock className="h-3.5 w-3.5" />
+              Active
+            </Button>
+            <Button
+              variant={statusFilter === 'completed' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setStatusFilter('completed')}
+              className="gap-1.5"
+            >
+              <Trophy className="h-3.5 w-3.5" />
+              Completed
+            </Button>
+          </div>
+        </div>
 
-          <TabsContent value="active">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {activePools.map((pool) => (
-                <Card key={pool.id}>
-                  <CardHeader>
-                    <div className="flex justify-between items-start mb-2">
-                      <Badge variant="secondary">{pool.sport}</Badge>
-                      <div className="flex gap-2">
+        {/* Pool Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredPools.map((pool) => (
+            <Card key={pool.id} className={pool.status === 'completed' && pool.result === 'won' ? 'border-primary' : pool.status === 'completed' ? 'border-destructive' : ''}>
+              <CardHeader>
+                <div className="flex justify-between items-start mb-2">
+                  <Badge variant="secondary">{pool.sport}</Badge>
+                  <div className="flex gap-2">
+                    {pool.status === 'active' ? (
+                      <>
                         <Badge variant={pool.role === 'owner' ? 'default' : 'outline'}>
                           {pool.role}
                         </Badge>
@@ -115,12 +154,21 @@ const MyPools = () => {
                           <Clock className="h-3 w-3 mr-1" />
                           Active
                         </Badge>
-                      </div>
-                    </div>
-                    <CardTitle className="text-lg">{pool.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
+                      </>
+                    ) : (
+                      <Badge variant={pool.result === 'won' ? 'default' : 'destructive'}>
+                        <Trophy className="h-3 w-3 mr-1" />
+                        {pool.result === 'won' ? 'Won' : 'Lost'}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                <CardTitle className="text-lg">{pool.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {pool.status === 'active' ? (
+                    <>
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center">
                           <Users className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -131,7 +179,6 @@ const MyPools = () => {
                           <span>{pool.matchDate}</span>
                         </div>
                       </div>
-                      
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center">
                           <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -139,7 +186,6 @@ const MyPools = () => {
                         </div>
                         <span className="text-primary font-medium">My bet: ${pool.myBet}</span>
                       </div>
-
                       {(() => {
                         const { userContribution, potentialWin } = calculatePredictedWin(pool);
                         return (
@@ -148,87 +194,50 @@ const MyPools = () => {
                           </div>
                         );
                       })()}
-
                       <div className="flex gap-2">
-                        <Button 
-                          className="flex-1" 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => handleViewDetails(pool)}
-                        >
+                        <Button className="flex-1" size="sm" variant="outline" onClick={() => handleViewDetails(pool)}>
                           View Details
                         </Button>
-                        <Button 
-                          className="flex-1" 
-                          size="sm" 
-                          variant="destructive"
-                          onClick={() => handleWithdraw(pool)}
-                        >
+                        <Button className="flex-1" size="sm" variant="destructive" onClick={() => handleWithdraw(pool)}>
                           Withdraw
                         </Button>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="completed">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {completedPools.map((pool) => (
-                <Card key={pool.id} className={pool.result === 'won' ? 'border-primary' : 'border-destructive'}>
-                  <CardHeader>
-                    <div className="flex justify-between items-start mb-2">
-                      <Badge variant="secondary">{pool.sport}</Badge>
-                      <div className="flex gap-2">
-                        <Badge variant={pool.result === 'won' ? 'default' : 'destructive'}>
-                          <Trophy className="h-3 w-3 mr-1" />
-                          {pool.result === 'won' ? 'Won' : 'Lost'}
-                        </Badge>
-                      </div>
-                    </div>
-                    <CardTitle className="text-lg">{pool.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
+                    </>
+                  ) : (
+                    <>
                       <div className="flex items-center justify-between text-sm">
                         <span>My bet: ${pool.myBet}</span>
                         <span className={pool.result === 'won' ? 'text-primary font-medium' : 'text-muted-foreground'}>
                           {pool.result === 'won' ? `Won: $${pool.winnings}` : 'No winnings'}
                         </span>
                       </div>
-                      
                       <div className="text-sm text-muted-foreground">
                         Completed on {pool.matchDate}
                       </div>
-
                       <div className="flex gap-2">
-                        <Button 
-                          className="flex-1" 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => handleViewResults(pool)}
-                        >
+                        <Button className="flex-1" size="sm" variant="outline" onClick={() => handleViewResults(pool)}>
                           View Results
                         </Button>
                         {pool.result === 'won' && (
-                          <Button 
-                            size="sm" 
-                            onClick={() => handleClaimWinnings(pool)}
-                            className="bg-primary hover:bg-primary/90"
-                          >
+                          <Button size="sm" onClick={() => handleClaimWinnings(pool)} className="bg-primary hover:bg-primary/90">
                             Claim
                           </Button>
                         )}
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+                    </>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {filteredPools.length === 0 && (
+          <div className="text-center py-12 text-muted-foreground">
+            <p className="text-lg font-medium">No pools found</p>
+            <p className="text-sm mt-1">Try adjusting your search or filters</p>
+          </div>
+        )}
 
         {selectedPool && (
           <PoolResultsModal

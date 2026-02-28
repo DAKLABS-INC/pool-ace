@@ -9,7 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, Calendar, Trophy, MapPin, X, Check, Plus, Trash2, BarChart3, Users } from "lucide-react";
+import { Search, Calendar, Trophy, MapPin, X, Check, Plus, Trash2, BarChart3, Users, CalendarDays } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 
 interface Match {
@@ -56,6 +59,7 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
   // Market-specific state
   const [marketTitle, setMarketTitle] = useState('');
   const [alternatives, setAlternatives] = useState<string[]>(['', '']);
+  const [marketDeadline, setMarketDeadline] = useState<Date | undefined>(undefined);
 
   const filteredMatches = useMemo(() => {
     if (!searchQuery.trim()) return MOCK_MATCHES.slice(0, 6);
@@ -105,7 +109,7 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
     setAlternatives(updated);
   };
 
-  const isPoolValid = poolType === 'pool' ? !!selectedMatch : (marketTitle.trim() !== '' && alternatives.filter(a => a.trim()).length >= 2);
+  const isPoolValid = poolType === 'pool' ? !!selectedMatch : (marketTitle.trim() !== '' && alternatives.filter(a => a.trim()).length >= 2 && !!marketDeadline);
 
   const handleReset = () => {
     setPoolType('pool');
@@ -115,6 +119,7 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
     setSelectedMatch(null);
     setMarketTitle('');
     setAlternatives(['', '']);
+    setMarketDeadline(undefined);
   };
 
   return (
@@ -322,6 +327,31 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
                     ))}
                   </div>
                   <p className="text-[11px] text-muted-foreground">Minimum 2 alternatives required</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Deadline</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={`w-full justify-start text-left font-normal ${!marketDeadline ? 'text-muted-foreground' : ''}`}
+                      >
+                        <CalendarDays className="mr-2 h-4 w-4" />
+                        {marketDeadline ? format(marketDeadline, 'PPP') : 'Select deadline'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={marketDeadline}
+                        onSelect={setMarketDeadline}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <p className="text-[11px] text-muted-foreground">When does this market close for entries?</p>
                 </div>
               </>
             )}
