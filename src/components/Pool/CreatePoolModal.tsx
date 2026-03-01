@@ -139,14 +139,14 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) { onClose(); handleReset(); } }}>
-      <DialogContent className="sm:max-w-[600px] p-0 gap-0 overflow-hidden max-h-[88vh]">
+      <DialogContent className="sm:max-w-[600px] p-0 gap-0 max-h-[88vh] flex flex-col">
         {/* Header */}
-        <div className="px-6 pt-6 pb-4 border-b bg-muted/30">
+        <div className="px-6 pt-6 pb-4 border-b bg-muted/30 shrink-0">
           <h2 className="text-lg font-semibold">Create New</h2>
           <p className="text-sm text-muted-foreground mt-0.5">Set up a pool or custom market</p>
         </div>
 
-        <div className="overflow-y-auto scrollbar-hide">
+        <div className="overflow-y-auto scrollbar-hide flex-1 min-h-0">
           <div className="px-6 py-5 space-y-5">
             {/* Type Selector */}
             <div className="grid grid-cols-2 gap-3">
