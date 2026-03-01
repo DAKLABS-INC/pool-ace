@@ -9,11 +9,22 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, Calendar, Trophy, MapPin, X, Check, Plus, Trash2, BarChart3, Users, CalendarDays } from "lucide-react";
+import { Search, Calendar, Trophy, MapPin, X, Check, Plus, Trash2, BarChart3, Users, CalendarDays, Clock } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const SPORT_TYPES = ['Football', 'Basketball', 'Tennis', 'Rugby', 'Baseball', 'Cricket', 'Hockey', 'MMA', 'Boxing', 'Other'];
+
+const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
+  const hours = Math.floor(i / 2);
+  const minutes = i % 2 === 0 ? '00' : '30';
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+  return { value: `${String(hours).padStart(2, '0')}:${minutes}`, label: `${displayHours}:${minutes} ${period}` };
+});
 
 interface Match {
   id: string;
@@ -60,6 +71,8 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
   const [marketTitle, setMarketTitle] = useState('');
   const [alternatives, setAlternatives] = useState<string[]>(['', '']);
   const [marketDeadline, setMarketDeadline] = useState<Date | undefined>(undefined);
+  const [marketTime, setMarketTime] = useState<string>('');
+  const [marketSport, setMarketSport] = useState<string>('');
 
   const filteredMatches = useMemo(() => {
     if (!searchQuery.trim()) return MOCK_MATCHES.slice(0, 6);
@@ -109,7 +122,7 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
     setAlternatives(updated);
   };
 
-  const isPoolValid = poolType === 'pool' ? !!selectedMatch : (marketTitle.trim() !== '' && alternatives.filter(a => a.trim()).length >= 2 && !!marketDeadline);
+  const isPoolValid = poolType === 'pool' ? !!selectedMatch : (marketTitle.trim() !== '' && alternatives.filter(a => a.trim()).length >= 2 && !!marketDeadline && !!marketTime && !!marketSport);
 
   const handleReset = () => {
     setPoolType('pool');
@@ -120,6 +133,8 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
     setMarketTitle('');
     setAlternatives(['', '']);
     setMarketDeadline(undefined);
+    setMarketTime('');
+    setMarketSport('');
   };
 
   return (
@@ -330,27 +345,55 @@ export const CreatePoolModal: React.FC<CreatePoolModalProps> = ({ isOpen, onClos
                 </div>
 
                 <div className="space-y-2">
+                  <Label className="text-sm font-medium">Sport Type</Label>
+                  <Select value={marketSport} onValueChange={setMarketSport}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a sport" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SPORT_TYPES.map((sport) => (
+                        <SelectItem key={sport} value={sport.toLowerCase()}>{sport}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
                   <Label className="text-sm font-medium">Deadline</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={`w-full justify-start text-left font-normal ${!marketDeadline ? 'text-muted-foreground' : ''}`}
-                      >
-                        <CalendarDays className="mr-2 h-4 w-4" />
-                        {marketDeadline ? format(marketDeadline, 'PPP') : 'Select deadline'}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarComponent
-                        mode="single"
-                        selected={marketDeadline}
-                        onSelect={setMarketDeadline}
-                        disabled={(date) => date < new Date()}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={`w-full justify-start text-left font-normal ${!marketDeadline ? 'text-muted-foreground' : ''}`}
+                        >
+                          <CalendarDays className="mr-2 h-4 w-4" />
+                          {marketDeadline ? format(marketDeadline, 'PP') : 'Date'}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <CalendarComponent
+                          mode="single"
+                          selected={marketDeadline}
+                          onSelect={setMarketDeadline}
+                          disabled={(date) => date < new Date()}
+                          initialFocus
+                          className="p-3 pointer-events-auto"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <Select value={marketTime} onValueChange={setMarketTime}>
+                      <SelectTrigger className={!marketTime ? 'text-muted-foreground' : ''}>
+                        <Clock className="mr-2 h-4 w-4" />
+                        <SelectValue placeholder="Time" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[200px]">
+                        {TIME_OPTIONS.map((t) => (
+                          <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <p className="text-[11px] text-muted-foreground">When does this market close for entries?</p>
                 </div>
               </>
